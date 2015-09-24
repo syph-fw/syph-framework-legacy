@@ -1,0 +1,21 @@
+{
+  "name": "SyLabs/SyphFramework",
+  "description": "SyphFramework",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Bruno Louvem",
+      "email": "btlouvem@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.3.17",
+    "twig/twig": "~1.0"
+  },
+  "autoload" : {
+    "psr-0": {
+      "Syph\\": "src/"
+    }
+  }
+}
