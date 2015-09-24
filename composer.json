@@ -2,7 +2,7 @@
   "name": "sylabs/syph-framework",
   "description": "SyphFramework",
   "minimum-stability": "stable",
-  "license": "proprietary",
+  "license": "MIT",
   "authors": [
     {
       "name": "Bruno Louvem",
