@@ -5,14 +5,19 @@ namespace Syph\Http;
  * User: Bruno
  * Date: 12/08/2015
  * Time: 12:16
- * Description: Classe responsavel por tratar as requisições
+ * Description: Classe responsavel por tratar as requisiï¿½ï¿½es
  */
+use Syph\Controller\SolveController;
+use Syph\DependencyInjection\ServiceInterface;
+use Syph\Http\Base\Request;
 use Syph\Http\Interfaces\HttpInterface;
-use Syph\Http\Request\RequestGet;
-use Syph\Http\Request\RequestPost;
+use Syph\Http\Base\HttpVerbose\RequestGet;
+use Syph\Http\Base\HttpVerbose\RequestPost;
 
-class Http implements HttpInterface
+class Http implements HttpInterface, ServiceInterface
 {
+    protected $solveController;
+
     private $path;
 
     private $hasGet;
@@ -26,50 +31,44 @@ class Http implements HttpInterface
     /**
      * Http constructor.
      */
-    public function __construct()
+    public function __construct(SolveController $solveController)
     {
         $this->path = (isset($_GET['path']))?$_GET['path']:"";
-        $this->handleVerboses();
+        //$this->handleVerboses();
+        $this->solveController = $solveController;
     }
 
-    public function getRequest()
+    public function getURI()
     {
         return $this->path;
     }
 
-    private function handleVerboses()
-    {
-        if(count($_GET)>0){
-            $this->handleGet();
-            $this->hasGet = true;
+    public function run(Request $request){
+
+        if (false === $controller = $this->solveController->getController($request)) {
+            throw new \Exception(sprintf('Unable to find the controller for path "%s". The route is wrongly configured.', $request->getPathInfo()));
         }
-        if(count($_POST)>0){
-            $this->handlePost();
-            $this->hasPost = true;
-        }
+        // controller arguments
+        $arguments = $this->solveController->getArgs($request, $controller);
+
+        // call controller
+        $response = call_user_func_array($controller, $arguments);
+
+        return $response;
     }
 
-    private function handleGet()
-    {
-        self::$get = new RequestGet();
-        foreach($_GET as $g=>$get){
-            self::$get->$g = $get;
-        }
-
+    public function getRequest(){
+        return self::$post;
     }
 
-    private function handlePost()
-    {
-        self::$post = new RequestPost();
-        foreach($_POST as $p=>$post){
-            self::$post->$p = $post;
-        }
-
-    }
 
     public static function getHttpRequest()
     {
         return self::$post;
     }
 
+    public function getName()
+    {
+        return 'http.core';
+    }
 }

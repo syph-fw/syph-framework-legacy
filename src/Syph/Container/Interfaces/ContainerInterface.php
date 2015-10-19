@@ -6,12 +6,14 @@
  * Time: 14:54
  */
 
-namespace Container\Interfaces;
+namespace Syph\Container\Interfaces;
 
+
+use Syph\DependencyInjection\ServiceInterface;
 
 interface ContainerInterface
 {
     public function get($id);
-    public function set();
-    public function load();
+    public function set(ServiceInterface $service);
+    public function load($serviceArray);
 }

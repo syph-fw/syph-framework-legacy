@@ -8,7 +8,7 @@
 
 namespace Syph\Controller;
 
-use Container\Container;
+use Syph\Container;
 
 class Controller
 {

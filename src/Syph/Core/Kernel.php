@@ -8,49 +8,126 @@
 
 namespace Syph\Core;
 
+use Syph\Container\Container;
+use Syph\Core\Interfaces\SyphKernelInterface;
 use Syph\AppBuilder\Environment;
 use Syph\AppBuilder\Interfaces\BuilderInterface;
+use Syph\DependencyInjection\ServiceInterface;
+use Syph\Http\Base\Request;
+use Syph\Http\Http;
 use Syph\Http\Interfaces\HttpInterface;
 use Syph\Routing\Router;
 
-abstract class Kernel
+abstract class Kernel implements SyphKernelInterface,ServiceInterface
 {
-    protected $booted;
+    protected $apps = array();
+    protected $isBooted;
     protected $env;
     protected $http;
-    protected $app;
     protected $builder;
+    protected $container;
+    protected $syphAppDir;
+
+    const VERSION = '0.1';
 
     public function __construct(Environment $env)
     {
-        $this->boot($env);
+        if(!$this->isBooted){
+            $this->boot($env);
+        }
+
     }
 
     private function boot(Environment $env)
     {
-        $this->booted = true;
         $this->env = $env;
+        $this->syphAppDir = $this->getSyphAppDir();
+
+        $this->initApps();
+        $this->initContainer();
+        $this->bindContainerApps();
+
+        $this->isBooted = true;
     }
 
-
-
-    public function handleRequest(HttpInterface $http,BuilderInterface $builder)
+    private function initApps()
     {
-        $this->http = $http;
+        foreach ($this->registerApps() as $app) {
+            $name = $app->getName();
+            if (isset($this->apps[$name])) {
+                throw new \LogicException(sprintf('You trying to register two apps with the same name "%s"', $name));
+            }
+            $this->apps[$name] = $app;
+        }
+
+    }
+
+    private function initContainer()
+    {
+        $this->container = new Container($this);
+        $this->container->startContainer($this->getServiceList());
+
+    }
+
+    private function bindContainerApps(){
+        foreach ($this->apps as $app) {
+            $app->setContainer($this->container);
+        }
+
+    }
+
+    private function bindRouterRequest(Request $request){
+        $this->container->set($request);
+        $router = $this->container->get('routing.router');
+        $request->setAttributes($router->match($request->get->get('path')));
+
+    }
+
+    private function getServiceList(){
+        $list = require_once $this->syphAppDir.'/../global/services.php';
+        return $list['services'];
+    }
+
+    public function getSyphAppDir(){
+        if (null === $this->syphAppDir) {
+            $r = new \ReflectionObject($this);
+            $this->syphAppDir = str_replace('\\', '/', dirname($r->getFileName()));
+        }
+
+        return $this->syphAppDir;
+    }
+
+    public function handleRequest($request,BuilderInterface $builder)
+    {
+
         $this->builder = $builder;
-        if($this->booted)
+        if($this->isBooted) {
             $builder->register($this->env);
+            $this->bindRouterRequest($request);
+        }
+
+        return $this->getHttp()->run($request);
+    }
+
+    /**
+     * Gets a HTTP from the container.
+     *
+     * @return Http
+     */
+    protected function getHttp()
+    {
+        return $this->container->get('http.core');
     }
 
     public function getResponse()
     {
-        $route = Router::execute($this->http->getRequest());
-
-        if(isset($route['args'])){
-            return $this->handleController($route['controller'],$route['action'],$route['args']);
-        }else{
-            return $this->handleController($route['controller'],$route['action']);
-        }
+//        $route = Router::execute($this->http->getRequest());
+//
+//        if(isset($route['args'])){
+//            return $this->handleController($route['controller'],$route['action'],$route['args']);
+//        }else{
+//            return $this->handleController($route['controller'],$route['action']);
+//        }
 
     }
 
@@ -65,7 +142,7 @@ abstract class Kernel
             $controller_path = APP_REAL_PATH . DS . 'app' . DS . $appName . DS . 'Controller' . DS . $controllerName . '.php';
 
             $this->app = $this->builder->loadApp($appName);
-            
+
             if (file_exists($controller_path)) {
                 include_once($controller_path);
 
@@ -75,14 +152,14 @@ abstract class Kernel
 
                     return $this->runController($controller, $actionName, $args);
                 } else {
-                    throw new \Exception(sprintf('Método: %s não encontrado', $actionName), 404);
+                    throw new \Exception(sprintf('Mï¿½todo: %s nï¿½o encontrado', $actionName), 404);
                 }
 
             } else {
-                throw new \Exception(sprintf('Controlador: %s não encontrado', $controllerName), 404);
+                throw new \Exception(sprintf('Controlador: %s nï¿½o encontrado', $controllerName), 404);
             }
         }else{
-            throw new \Exception(sprintf('Applicação: %s não existe', $appName), 404);
+            throw new \Exception(sprintf('Applicaï¿½ï¿½o: %s nï¿½o existe', $appName), 404);
         }
     }
 
@@ -92,7 +169,15 @@ abstract class Kernel
         {
             return call_user_func_array(array( new $controllerName ,$action), $args);
         }
-        throw new \Exception('Controller não pode ser chamado',404);
+        throw new \Exception('Controller nï¿½o pode ser chamado',404);
+    }
+
+    public function getApp($appName){
+        return array($this->apps[$appName]);
+    }
+
+    public function getName(){
+        return 'kernel';
     }
 
 }

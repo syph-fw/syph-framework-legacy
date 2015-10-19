@@ -9,7 +9,11 @@
 namespace Syph\Controller;
 
 
-class BaseController
-{
+use Syph\Container\SyphContainer;
 
+class BaseController extends SyphContainer
+{
+    public function get($id){
+        return $this->container->get($id);
+    }
 }

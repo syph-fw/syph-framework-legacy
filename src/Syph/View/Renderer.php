@@ -79,7 +79,7 @@ class Renderer implements RendererInterface
         $this->extenssion = substr(strrchr($template[1],'.'),1);
         $this->view_request = $template[1];
         $this->file = substr(strrchr($template[1],'/'),1);
-        $this->path = 'app'.DS.$template[0].DS.'View'.DS.substr($template[1], 0,strrpos($template[1], '/')).DS;
-        $this->view_path = 'app'.DS.$template[0].DS.'View'.DS;
+        $this->path = '../app'.DS.$template[0].DS.'View'.DS.substr($template[1], 0,strrpos($template[1], '/')).DS;
+        $this->view_path = '../app'.DS.$template[0].DS.'View'.DS;
     }
 }

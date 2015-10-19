@@ -1,6 +1,7 @@
 <?php
-namespace Container;
-use Container\Interfaces\ContainerInterface;
+namespace Syph\Container;
+use Syph\Container\Interfaces\ContainerInterface;
+use Syph\DependencyInjection\ServiceInterface;
 
 /**
  * Created by PhpStorm.
@@ -10,23 +11,54 @@ use Container\Interfaces\ContainerInterface;
  */
 class Container implements ContainerInterface
 {
-    public function __construct()
+    public $service = array();
+
+    public function __construct($kernel)
     {
-        $this->load();
+        $this->service['kernel'] = $kernel;
     }
 
-    public function get($id)
-    {
-        // TODO: Implement get() method.
+    public function startContainer(array $mainServices = array()){
+        $this->service['container'] = $this;
+        $this->load($mainServices);
     }
 
-    public function set()
+    public function get($name)
     {
-        // TODO: Implement set() method.
+        return $this->service[$name];
     }
 
-    public function load()
+    public function has($name){
+        return array_key_exists($name,$this->service);
+    }
+
+    public function set(ServiceInterface $service)
     {
-        // TODO: Implement load() method.
+        $this->service[$service->getName()] = $service;
+    }
+
+    public function load($services,$nameFather = null)
+    {
+
+        foreach($services as $name => $service){
+            $args = array();
+            if(!$this->has($name)){
+                if(isset($service['args']) && count($service['args']) > 0){
+                    foreach ($service['args'] as $argName=>$arg) {
+                        $this->load(array($argName=>$arg),$name);
+                        if($this->has($argName)){
+
+                            $args[$name][] = $this->get($argName);
+                        }
+
+                    }
+                }
+                $reflect = new \ReflectionClass($service['class']);
+                $serviceInstance = $reflect->newInstanceArgs((array_key_exists($name,$args))?$args[$name]:array());
+                $this->set($serviceInstance);
+            }else{
+                $args[$nameFather][] = $this->get($name);
+            }
+        }
     }
 }

@@ -1,12 +1,14 @@
 <?php
 namespace Syph\DB;
+use Syph\DependencyInjection\ServiceInterface;
+
 /**
  * Created by PhpStorm.
  * User: PSBI
  * Date: 13/08/2015
  * Time: 14:44
  */
-class Conn
+class Conn implements ServiceInterface
 {
     public static $instance;
 
@@ -26,4 +28,8 @@ class Conn
     }
 
 
+    public function getName()
+    {
+        return 'connection';
+    }
 }
