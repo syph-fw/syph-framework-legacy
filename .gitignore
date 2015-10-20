@@ -3,6 +3,7 @@
 
 # IntelliJ project files
 .idea
+vendor
 out
 gen
 # Created by .ignore support plugin (hsz.mobi)
