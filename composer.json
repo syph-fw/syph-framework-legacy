@@ -1,7 +1,7 @@
 {
   "name": "sylabs/syph-framework",
   "description": "SyphFramework",
-  "minimum-stability": "dev",
+  "minimum-stability": "stable",
   "license": "MIT",
   "authors": [
     {
