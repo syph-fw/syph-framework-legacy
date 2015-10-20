@@ -79,7 +79,11 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
     private function bindRouterRequest(Request $request){
         $this->container->set($request);
         $router = $this->container->get('routing.router');
-        $request->setAttributes($router->match($request->get->get('path')));
+        if($request->get->has('path')){
+            $request->setAttributes($router->match($request->get->get('path')));
+        }else{
+            $request->setAttributes($router->match('/'));
+        }
 
     }
 
