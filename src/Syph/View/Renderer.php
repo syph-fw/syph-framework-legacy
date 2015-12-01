@@ -8,12 +8,15 @@
 
 namespace Syph\View;
 
-
+use Syph\DependencyInjection\ServiceInterface;
+use Syph\Http\Base\Request;
+use Syph\Helpers\FilesHelper;
 use Syph\Twig\Extension\AssetsExtension;
 use Syph\View\Interfaces\RendererInterface;
 
-class Renderer implements RendererInterface
+class Renderer implements RendererInterface,ServiceInterface
 {
+	private $basePath;
     private $template;
     private $file;
     private $view_request;
@@ -21,7 +24,13 @@ class Renderer implements RendererInterface
     private $path;
     private $view_path;
 
-    public function __construct($file)
+    public function __construct(Request $request)
+    {
+		$this->basePath = str_replace('index.php', '', $_SERVER['SCRIPT_FILENAME']);
+	
+    }
+
+    public function run($file)
     {
         $this->template = $file;
         $this->extractFileInfo($file);
@@ -30,12 +39,12 @@ class Renderer implements RendererInterface
     public function loadContent($filename,$vars)
     {
         extract($vars);
-        include($filename);
+        include(FilesHelper::normalizePath($filename));
     }
 
     public function render($file,$vars)
     {
-        //var_dump($this);die;
+       
         switch($this->extenssion){
             case 'twig':
                 $loader = new \Twig_Loader_Filesystem($this->view_path);
@@ -51,15 +60,12 @@ class Renderer implements RendererInterface
                 return ob_get_clean();
                 break;
         }
-
-
     }
 
     public function createFileRender($file,$vars)
     {
-        $filename = $file;
-        if($this->validatePath($filename)){
-            $this->loadContent($filename,$vars);
+        if($this->validatePath($file)){
+            $this->loadContent($file,$vars);
         }
     }
 
@@ -70,7 +76,7 @@ class Renderer implements RendererInterface
 
     public function getFilename()
     {
-        return $this->path.$this->file;
+        return FilesHelper::normalizePath($this->basePath. $this->view_path.'/'.$this->file);
     }
 
     private function extractFileInfo($file)
@@ -78,8 +84,14 @@ class Renderer implements RendererInterface
         $template = explode(':',$file);
         $this->extenssion = substr(strrchr($template[1],'.'),1);
         $this->view_request = $template[1];
-        $this->file = substr(strrchr($template[1],'/'),1);
+        $this->file = $template[1];
+				//substr(strrchr($template[1],'/'),1);
         $this->path = '../app'.DS.$template[0].DS.'View'.DS.substr($template[1], 0,strrpos($template[1], '/')).DS;
-        $this->view_path = '../app'.DS.$template[0].DS.'View'.DS;
+        $this->view_path = 'app/'.$template[0].'/View';
+    }
+	
+    public function getName()
+    {
+        return 'view.renderer';
     }
 }
