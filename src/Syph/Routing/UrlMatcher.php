@@ -13,6 +13,8 @@ use Syph\DependencyInjection\ServiceInterface;
 
 class UrlMatcher implements ServiceInterface{
 
+	public function __construct(){	}
+
     public function match($url,$collection){
 
         $url = (substr($url,0,1) == '/')? $url : '/'.$url ;
