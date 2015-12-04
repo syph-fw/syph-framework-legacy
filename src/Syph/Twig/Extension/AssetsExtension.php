@@ -20,7 +20,7 @@ class AssetsExtension extends \Twig_Extension
 
     public function getAssetUrl($path)
     {
-        return '/'.$path;
+        return $path;
     }
 
     public function getAssetsVersion()

@@ -16,7 +16,7 @@ use Syph\View\Interfaces\RendererInterface;
 
 class Renderer implements RendererInterface,ServiceInterface
 {
-	private $basePath;
+    private $basePath;
     private $template;
     private $file;
     private $view_request;
@@ -26,8 +26,8 @@ class Renderer implements RendererInterface,ServiceInterface
 
     public function __construct(Request $request)
     {
-		$this->basePath = str_replace('index.php', '', $_SERVER['SCRIPT_FILENAME']);
-	
+        $this->basePath = str_replace('index.php', '', $_SERVER['SCRIPT_FILENAME']);
+
     }
 
     public function run($file)
@@ -44,7 +44,7 @@ class Renderer implements RendererInterface,ServiceInterface
 
     public function render($file,$vars)
     {
-       
+
         switch($this->extenssion){
             case 'twig':
                 $loader = new \Twig_Loader_Filesystem($this->view_path);
@@ -76,7 +76,7 @@ class Renderer implements RendererInterface,ServiceInterface
 
     public function getFilename()
     {
-        return FilesHelper::normalizePath($this->basePath. $this->view_path.'/'.$this->file);
+        return FilesHelper::normalizePath('..'.DS.$this->path.$this->file);
     }
 
     private function extractFileInfo($file)
@@ -84,12 +84,11 @@ class Renderer implements RendererInterface,ServiceInterface
         $template = explode(':',$file);
         $this->extenssion = substr(strrchr($template[1],'.'),1);
         $this->view_request = $template[1];
-        $this->file = $template[1];
-				//substr(strrchr($template[1],'/'),1);
-        $this->path = '../app'.DS.$template[0].DS.'View'.DS.substr($template[1], 0,strrpos($template[1], '/')).DS;
-        $this->view_path = 'app/'.$template[0].'/View';
+        $this->file = strrchr($template[1],'/') === FALSE ? $template[1] :substr(strrchr($template[1],'/'),1);
+        $this->path = '..'.DS.'app'.DS.$template[0].DS.'View'.DS.substr($template[1], 0,strrpos($template[1], '/')).DS;
+        $this->view_path = '..'.DS.'app'.DS.$template[0].DS.'View'.DS;
     }
-	
+
     public function getName()
     {
         return 'view.renderer';
