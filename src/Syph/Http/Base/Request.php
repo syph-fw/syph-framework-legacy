@@ -171,6 +171,7 @@ class Request implements ServiceInterface{
         $this->attributes = new HttpVerbose($attributes);
 //        $this->cookies = new ParameterBag($cookies);
 //        $this->files = new FileBag($files);
+
         $this->server = new Server($server);
         $this->headers = new Header($this->server->getHeaders());
 
@@ -196,6 +197,7 @@ class Request implements ServiceInterface{
     public static function create()
     {
         $server = $_SERVER;
+
         if ('cli-server' === php_sapi_name()) {
             if (array_key_exists('HTTP_CONTENT_LENGTH', $_SERVER)) {
                 $server['CONTENT_LENGTH'] = $_SERVER['HTTP_CONTENT_LENGTH'];

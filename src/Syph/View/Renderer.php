@@ -17,6 +17,7 @@ use Syph\View\Interfaces\RendererInterface;
 class Renderer implements RendererInterface,ServiceInterface
 {
     private $basePath;
+    private $baseUrl;
     private $template;
     private $file;
     private $view_request;
@@ -27,7 +28,7 @@ class Renderer implements RendererInterface,ServiceInterface
     public function __construct(Request $request)
     {
         $this->basePath = str_replace('index.php', '', $_SERVER['SCRIPT_FILENAME']);
-
+        $this->baseUrl = $request->getBaseUrl();
     }
 
     public function run($file)
@@ -44,13 +45,12 @@ class Renderer implements RendererInterface,ServiceInterface
 
     public function render($file,$vars)
     {
-
         switch($this->extenssion){
             case 'twig':
                 $loader = new \Twig_Loader_Filesystem($this->view_path);
                 $twig = new \Twig_Environment($loader,array('debug' => true,));
                 $twig->addExtension(new \Twig_Extension_Debug());
-                $twig->addExtension(new AssetsExtension());
+                $twig->addExtension(new AssetsExtension($this->baseUrl));
                 $template = $twig->loadTemplate($this->view_request);
                 return $template->render($vars);
                 break;
@@ -64,6 +64,7 @@ class Renderer implements RendererInterface,ServiceInterface
 
     public function createFileRender($file,$vars)
     {
+
         if($this->validatePath($file)){
             $this->loadContent($file,$vars);
         }
@@ -76,17 +77,19 @@ class Renderer implements RendererInterface,ServiceInterface
 
     public function getFilename()
     {
-        return FilesHelper::normalizePath('..'.DS.$this->path.$this->file);
+        return FilesHelper::normalizePath($this->path.$this->file);
     }
 
     private function extractFileInfo($file)
     {
+
         $template = explode(':',$file);
         $this->extenssion = substr(strrchr($template[1],'.'),1);
         $this->view_request = $template[1];
         $this->file = strrchr($template[1],'/') === FALSE ? $template[1] :substr(strrchr($template[1],'/'),1);
         $this->path = '..'.DS.'app'.DS.$template[0].DS.'View'.DS.substr($template[1], 0,strrpos($template[1], '/')).DS;
         $this->view_path = '..'.DS.'app'.DS.$template[0].DS.'View'.DS;
+
     }
 
     public function getName()
