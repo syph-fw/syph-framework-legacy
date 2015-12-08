@@ -30,21 +30,21 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
 
     const VERSION = '0.1';
 
-    public function __construct(Environment $env)
+    public function __construct(Environment $env,Request $request)
     {
         if(!$this->isBooted){
-            $this->boot($env);
+            $this->boot($env,$request);
         }
 
     }
 
-    private function boot(Environment $env)
+    private function boot(Environment $env,Request $request)
     {
         $this->env = $env;
         $this->syphAppDir = $this->getSyphAppDir();
 
         $this->initApps();
-        $this->initContainer();
+        $this->initContainer($request);
         $this->bindContainerApps();
 
         $this->isBooted = true;
@@ -62,9 +62,10 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
 
     }
 
-    private function initContainer()
+    private function initContainer(Request $request)
     {
         $this->container = new Container($this);
+        $this->container->set($request);
         $this->container->startContainer($this->getServiceList());
 
     }
@@ -77,7 +78,7 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
     }
 
     private function bindRouterRequest(Request $request){
-        $this->container->set($request);
+//        $this->container->set($request);
         $router = $this->container->get('routing.router');
         if($request->get->has('path')){
             $request->setAttributes($router->match($request->get->get('path')));
@@ -101,16 +102,16 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
         return $this->syphAppDir;
     }
 
-    public function handleRequest($request,BuilderInterface $builder)
+    public function handleRequest(BuilderInterface $builder)
     {
 
         $this->builder = $builder;
         if($this->isBooted) {
             $builder->register($this->env);
-            $this->bindRouterRequest($request);
+            $this->bindRouterRequest($this->container->get('http.request'));
         }
 
-        return $this->getHttp()->run($request);
+        return $this->getHttp()->run($this->container->get('http.request'));
     }
 
     /**

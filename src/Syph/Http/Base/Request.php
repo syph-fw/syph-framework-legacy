@@ -53,7 +53,7 @@ class Request implements ServiceInterface{
     /**
      * Server and execution environment parameters ($_SERVER).
      *
-     * @var \Syph\Http\Base\HttpVerbose\RequestServer
+     * @var \Syph\Http\Base\HttpVerbose\Server
      *
      * @api
      */

@@ -8,7 +8,14 @@ namespace Syph\Twig\Extension;
 class AssetsExtension extends \Twig_Extension
 {
 
-
+    private $baseUrl;
+    /**
+     * AssetsExtension constructor.
+     */
+    public function __construct($baseUrl)
+    {
+        $this->baseUrl = $baseUrl;
+    }
 
     public function getFunctions()
     {
@@ -20,7 +27,7 @@ class AssetsExtension extends \Twig_Extension
 
     public function getAssetUrl($path)
     {
-        return $path;
+        return $this->baseUrl.$path;
     }
 
     public function getAssetsVersion()
