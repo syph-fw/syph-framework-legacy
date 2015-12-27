@@ -23,6 +23,10 @@ class Container implements ContainerInterface
         $this->load($mainServices);
     }
 
+    public function loadCustomContainer(array $customServices = array()){
+        $this->load($customServices);
+    }
+
     public function get($name)
     {
         return $this->service[$name];
@@ -35,6 +39,14 @@ class Container implements ContainerInterface
     public function set(ServiceInterface $service)
     {
         $this->service[$service->getName()] = $service;
+    }
+
+    public function debug(){
+        foreach ($this->service as $service) {
+            echo "<pre>";
+            var_dump($service);
+            echo "</pre>";
+        }
     }
 
     public function load($services,$nameFather = null)

@@ -11,6 +11,9 @@ use Syph\DependencyInjection\ServiceInterface;
 class Router implements ServiceInterface
 {
     private $routes = array();
+    /**
+     * @var null|UrlMatcher
+     */
     private $matcher = null;
     private $collection = null;
 
@@ -34,6 +37,10 @@ class Router implements ServiceInterface
     public function match($url){
         return $this->matcher->match($url,$this->routes);
 
+    }
+
+    public function reverse($name,array $parameters = array()){
+        return $this->matcher->reverse($name,$this->routes,$parameters);
     }
 
     public function getName()

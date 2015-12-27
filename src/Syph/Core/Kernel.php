@@ -46,6 +46,7 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
         $this->initApps();
         $this->initContainer($request);
         $this->bindContainerApps();
+        $this->bindRouterRequest();
 
         $this->isBooted = true;
     }
@@ -67,6 +68,7 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
         $this->container = new Container($this);
         $this->container->set($request);
         $this->container->startContainer($this->getServiceList());
+        $this->container->loadCustomContainer($this->getCustomList());
 
     }
 
@@ -77,9 +79,10 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
 
     }
 
-    private function bindRouterRequest(Request $request){
+    private function bindRouterRequest(){
 //        $this->container->set($request);
         $router = $this->container->get('routing.router');
+        $request = $this->container->get('http.request');
         if($request->get->has('path')){
             $request->setAttributes($router->match($request->get->get('path')));
         }else{
@@ -89,6 +92,11 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
     }
 
     private function getServiceList(){
+        $list = require_once 'Config/services.php';
+        return $list['services'];
+    }
+
+    private function getCustomList(){
         $list = require_once $this->syphAppDir.'/../global/services.php';
         return $list['services'];
     }
@@ -108,7 +116,6 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
         $this->builder = $builder;
         if($this->isBooted) {
             $builder->register($this->env);
-            $this->bindRouterRequest($this->container->get('http.request'));
         }
 
         return $this->getHttp()->run($this->container->get('http.request'));

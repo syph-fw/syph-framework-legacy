@@ -13,7 +13,11 @@ use Syph\DependencyInjection\ServiceInterface;
 
 class UrlMatcher implements ServiceInterface{
 
-	public function __construct(){	}
+    private $patterns;
+
+	public function __construct(){
+        $this->initPatterns();
+    }
 
     public function match($url,$collection){
 
@@ -32,6 +36,22 @@ class UrlMatcher implements ServiceInterface{
 
     }
 
+    public function reverse($selected_route,$collection, array $parameters = array()){
+        foreach ($collection as $name => $route)
+        {
+            if($selected_route == $name){
+                $url = $route->getPattern();
+
+                if(count($parameters) > 0){
+                    $url = preg_replace($this->patterns, $parameters, $url);
+                }
+
+                return $url;
+            }
+        }
+        throw new \Exception(sprintf('Route with name: "%s" not found',$selected_route));
+    }
+
     public function isValidRoute(Route $route){
         return $route->getPattern() && is_callable($route->getCallback());
     }
@@ -39,5 +59,14 @@ class UrlMatcher implements ServiceInterface{
     public function getName()
     {
         return "routing.urlmatcher";
+    }
+
+    private function initPatterns()
+    {
+        $this->patterns = array(
+            '/\(\\\w\+\)/',
+            '/\(\\\d\+\)/',
+        )
+        ;
     }
 }
