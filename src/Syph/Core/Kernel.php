@@ -9,6 +9,7 @@
 namespace Syph\Core;
 
 use Syph\AppBuilder\AppBuilder;
+use Syph\Autoload\ClassLoader;
 use Syph\Container\Container;
 use Syph\Core\Interfaces\SyphKernelInterface;
 use Syph\AppBuilder\Interfaces\BuilderInterface;
@@ -41,12 +42,27 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
 //        $this->env = $env;
         $this->syphAppDir = $this->getSyphAppDir();
 
+        $this->initClassLoader();
         $this->initApps();
         $this->initContainer($request);
         $this->bindContainerApps();
         $this->bindRouterRequest();
 
         $this->isBooted = true;
+    }
+
+    private function initClassLoader()
+    {
+        $loader = new ClassLoader();
+
+        $loader->register();
+
+        foreach (new \DirectoryIterator(USER_APPS_DIR) as $fileInfo) {
+            if($fileInfo->isDot()) continue;
+            if($fileInfo->isFile()) continue;
+            $loader->addNamespace($fileInfo->getFilename(), USER_APPS_DIR.DS.$fileInfo->getFilename());
+        }
+
     }
 
     private function initApps()
