@@ -24,7 +24,7 @@
       "Syph\\": "src/Syph"
     },
     "files": [
-      "Syph/Helpers/functions.php"
+      "src/Syph/Helpers/functions.php"
     ]
   }
 }
