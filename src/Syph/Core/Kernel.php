@@ -10,7 +10,7 @@ namespace Syph\Core;
 
 use Syph\AppBuilder\AppBuilder;
 use Syph\Autoload\ClassLoader;
-use Syph\Container\Container;
+use Syph\DependencyInjection\Container\Container;
 use Syph\Core\Interfaces\SyphKernelInterface;
 use Syph\AppBuilder\Interfaces\BuilderInterface;
 use Syph\DependencyInjection\ServiceInterface;

@@ -1,6 +1,7 @@
 <?php
-namespace Syph\Container;
-use Syph\Container\Interfaces\ContainerInterface;
+namespace Syph\DependencyInjection\Container;
+use Interop\Container\ContainerInterface;
+use Syph\DependencyInjection\Container\Interfaces\ContainerInterface as SyphContainerInterface;
 use Syph\DependencyInjection\ServiceInterface;
 
 /**
@@ -9,7 +10,7 @@ use Syph\DependencyInjection\ServiceInterface;
  * Date: 26/08/2015
  * Time: 14:47
  */
-class Container implements ContainerInterface
+class Container implements ContainerInterface,SyphContainerInterface
 {
     public $service = array();
 

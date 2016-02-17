@@ -6,7 +6,7 @@
  * Time: 14:54
  */
 
-namespace Syph\Container\Interfaces;
+namespace Syph\DependencyInjection\Container\Interfaces;
 
 
 use Syph\DependencyInjection\ServiceInterface;

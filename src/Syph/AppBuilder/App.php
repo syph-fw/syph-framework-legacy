@@ -10,7 +10,7 @@ namespace Syph\AppBuilder;
 
 
 use Syph\AppBuilder\Interfaces\AppInterface;
-use Syph\Container\SyphContainer;
+use Syph\DependencyInjection\Container\SyphContainer;
 
 class App extends SyphContainer implements AppInterface
 {

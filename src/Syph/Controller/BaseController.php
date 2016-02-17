@@ -9,7 +9,7 @@
 namespace Syph\Controller;
 
 
-use Syph\Container\SyphContainer;
+use Syph\DependencyInjection\Container\SyphContainer;
 
 class BaseController extends SyphContainer
 {
