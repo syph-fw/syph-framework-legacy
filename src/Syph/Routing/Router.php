@@ -16,18 +16,25 @@ class Router implements ServiceInterface
      */
     private $matcher = null;
     private $collection = null;
+    private $status;
 
     public function __construct(UrlMatcher $matcher) {
         $this->matcher = $matcher;
         $this->collection = RouterCollection::getAllRoutes();
         $this->loadCollection();
+        $this->loadStatus();
     }
 
     public function loadCollection(){
+
+        if(!$this->checkCollection())
+            return;
+
         foreach ($this->collection as $name => $route) {
             if($this->matcher->isValidRoute($route))
                 $this->addRoute($name,$route);
         }
+
     }
 
     public function addRoute($name,Route $route){
@@ -46,5 +53,23 @@ class Router implements ServiceInterface
     public function getName()
     {
         return 'routing.router';
+    }
+
+    public function loadStatus()
+    {
+        if($this->checkCollection()) {
+            $this->setStatus('off');
+            return;
+        }
+
+        $this->setStatus('on');
+    }
+
+    public function checkCollection(){
+        return !is_null($this->collection);
+    }
+
+    public function setStatus($status){
+        $this->status = $status;
     }
 }

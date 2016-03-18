@@ -16,21 +16,31 @@ use Syph\AppBuilder\Interfaces\BuilderInterface;
 use Syph\DependencyInjection\ServiceInterface;
 use Syph\Http\Base\Request;
 use Syph\Http\Http;
+use Syph\Routing\Router;
 
 abstract class Kernel implements SyphKernelInterface,ServiceInterface
 {
     protected $apps = array();
     protected $isBooted;
     protected $env;
+    protected $mode;
     protected $http;
     protected $builder;
+    /**
+     * @var Container $container
+     */
     protected $container;
     protected $syphAppDir;
 
     const VERSION = '0.1';
 
-    public function __construct(Request $request)
+    public function __construct(Request $request = null)
     {
+        if(null === $request){
+            $this->mode = 'CLI';
+            $request = Request::create($this->mode);
+        }
+
         if(!$this->isBooted){
             $this->boot($request);
         }
@@ -46,7 +56,9 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
         $this->initApps();
         $this->initContainer($request);
         $this->bindContainerApps();
-        $this->bindRouterRequest();
+        if (!$this->mode == 'CLI'){
+            $this->bindRouterRequest();
+        }
 
         $this->isBooted = true;
     }
@@ -96,7 +108,14 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
 
     private function bindRouterRequest(){
 //        $this->container->set($request);
+        /**
+         * @var Router $router
+         */
         $router = $this->container->get('routing.router');
+
+        /**
+         * @var Request $request
+         */
         $request = $this->container->get('http.request');
         if($request->get->has('path')){
             $request->setAttributes($router->match($request->get->get('path')));

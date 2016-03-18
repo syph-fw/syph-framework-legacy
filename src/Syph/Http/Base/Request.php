@@ -35,7 +35,7 @@ class Request implements ServiceInterface{
     /**
      * Request body parameters ($_POST).
      *
-     * @var \Syph\Http\Base\HttpVerbose\RequestPost
+     * @var \Syph\Http\Base\HttpVerbose\HttpVerbose
      *
      * @api
      */
@@ -44,7 +44,7 @@ class Request implements ServiceInterface{
     /**
      * Query string parameters ($_GET).
      *
-     * @var \Syph\Http\Base\HttpVerbose\RequestGet
+     * @var \Syph\Http\Base\HttpVerbose\HttpVerbose
      *
      * @api
      */
@@ -62,7 +62,7 @@ class Request implements ServiceInterface{
     /**
      * Uploaded files ($_FILES).
      *
-     * @var \Syph\Http\Base\HttpVerbose\RequestFiles
+     * @var \Syph\Http\Base\HttpVerbose\HttpVerbose
      *
      * @api
      */
@@ -71,7 +71,7 @@ class Request implements ServiceInterface{
     /**
      * Cookies ($_COOKIE).
      *
-     * @var \Syph\Http\Base\HttpVerbose\RequestCoockies
+     * @var \Syph\Http\Base\HttpVerbose\HttpVerbose
      *
      * @api
      */
@@ -80,7 +80,7 @@ class Request implements ServiceInterface{
     /**
      * Headers (taken from the $_SERVER).
      *
-     * @var \Syph\Http\Base\HttpVerbose\RequestHeader
+     * @var \Syph\Http\Base\HttpVerbose\Header
      *
      * @api
      */
@@ -194,11 +194,11 @@ class Request implements ServiceInterface{
      *
      * @api
      */
-    public static function create()
+    public static function create($mode = 'WEB')
     {
         $server = $_SERVER;
 
-        if ('cli-server' === php_sapi_name()) {
+        if ('cli-server' === php_sapi_name() && $mode == 'CLI') {
             if (array_key_exists('HTTP_CONTENT_LENGTH', $_SERVER)) {
                 $server['CONTENT_LENGTH'] = $_SERVER['HTTP_CONTENT_LENGTH'];
             }
