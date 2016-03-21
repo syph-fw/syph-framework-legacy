@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by PhpStorm.
- * User: prapa
+ * User: Bruno Louvem
  * Date: 18/03/2016
  * Time: 09:52
  */
@@ -18,5 +18,6 @@ interface InputInterface
     public function hasParameters();
     public function getParameters();
     public function setParameters();
+    public function getCommand();
 
 }
