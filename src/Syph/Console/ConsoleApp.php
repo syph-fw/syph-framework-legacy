@@ -9,7 +9,9 @@
 namespace Syph\Console;
 
 
-use Syph\Console\Input\CommandInterface;
+
+use Syph\Console\Commands\Command;
+use Syph\Console\Commands\CommandInterface;
 use Syph\Console\Input\InputInterface;
 use Syph\Core\Interfaces\SyphKernelInterface;
 
@@ -17,12 +19,24 @@ class ConsoleApp
 {
     private $kernel;
     private $commands = array();
+
+    const CONSOLE_DIR = __DIR__;
     /**
      * ConsoleApp constructor.
      */
     public function __construct(SyphKernelInterface $kernel)
     {
         $this->kernel = $kernel;
+        $this->loadNativeCommands();
+    }
+
+    public function loadNativeCommands()
+    {
+        foreach ($this->kernel->getNativeCommands() as $command) {
+            $reflect = new \ReflectionClass(Command::_namespace.'\\NativeCommands\\'.$command);
+            $this->registerCommand($reflect->newInstance('test','stes'));
+        }
+
     }
 
     public function register(InputInterface $input)
@@ -52,7 +66,6 @@ class ConsoleApp
     {
         $this->commands[$command->getName()] = $command;
     }
-
 
     public function hasCommand($command_name)
     {

@@ -16,4 +16,5 @@ interface SyphKernelInterface {
      * @return AppInterface[] An array of app instances.
      */
     public function registerApps();
-} 
+    public function getNativeCommands();
+}

@@ -9,9 +9,12 @@
 namespace Syph\Console\Input;
 
 
+use Syph\Console\Commands\Command;
+
 abstract class Input implements InputInterface
 {
 
+    protected $arguments = array();
 
     /**
      * Input constructor.
@@ -28,7 +31,7 @@ abstract class Input implements InputInterface
 
     public function getArguments()
     {
-        // TODO: Implement getArguments() method.
+        return $this->arguments;
     }
 
     public function setArguments()
@@ -56,7 +59,9 @@ abstract class Input implements InputInterface
      */
     public function getCommand()
     {
-        return new Command('SyphWake');
+        return new Command('SyphAwake',function(){
+            print "versioning...\n";
+        });
     }
 
 }

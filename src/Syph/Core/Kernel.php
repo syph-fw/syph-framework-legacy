@@ -10,6 +10,7 @@ namespace Syph\Core;
 
 use Syph\AppBuilder\AppBuilder;
 use Syph\Autoload\ClassLoader;
+use Syph\Console\ConsoleApp;
 use Syph\DependencyInjection\Container\Container;
 use Syph\Core\Interfaces\SyphKernelInterface;
 use Syph\AppBuilder\Interfaces\BuilderInterface;
@@ -97,6 +98,18 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
         $this->container->startContainer($this->getServiceList());
         $this->container->loadCustomContainer($this->getCustomList());
 
+    }
+
+    public function getNativeCommands(){
+        $files = [];
+        foreach (new \DirectoryIterator(ConsoleApp::CONSOLE_DIR.DS."Commands".DS."NativeCommands") as $fileInfo) {
+            if($fileInfo->isDot()) continue;
+            if($fileInfo->isDir()) continue;
+            if(preg_match('/Command\.php/',$fileInfo->getFilename()))
+                $files[] = $fileInfo->getBasename('.php');
+        }
+
+        return $files;
     }
 
     private function bindContainerApps(){

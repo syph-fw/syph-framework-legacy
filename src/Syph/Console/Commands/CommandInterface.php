@@ -6,7 +6,7 @@
  * Time: 16:05
  */
 
-namespace Syph\Console\Input;
+namespace Syph\Console\Commands;
 
 
 interface CommandInterface

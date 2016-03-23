@@ -12,7 +12,9 @@ namespace Syph\Console\Input;
 class ArgvInput extends Input
 {
 
-    public $args;
+    public $commands;
+    public $options;
+    public $params;
     /**
      * ArgvInput constructor.
      */
@@ -24,19 +26,29 @@ class ArgvInput extends Input
 
         array_shift($args);
 
-        $this->args = $args;
+        $this->arguments = $args;
 
         parent::__construct();
 
     }
 
+    public function parse()
+    {
+        InputParser::parse($this);
+    }
+
     public function printArgs()
     {
-        foreach ($this->args as $arg) {
+        echo "\n---------------- \n";
+        echo "\n";
+        echo "\nSTART PRINT ARGS \n";
+        echo "\n";
+        foreach ($this->arguments as $arg) {
             echo " Arg: ".$arg."\n";
         }
-
+        echo "\n";
         echo "FIM";
-
+        echo "\n";
+        echo "\n---------------- \n";
     }
 }
