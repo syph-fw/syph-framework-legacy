@@ -15,7 +15,9 @@ class BaseController extends SyphContainer
 {
     public function get($id){
         if('http.session' == $id){
-            return $this->container->get($id)->start();
+            $session = $this->container->get($id);
+            $session->start();
+            return $session;
         }
         return $this->container->get($id);
     }

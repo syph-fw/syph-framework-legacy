@@ -18,6 +18,7 @@ class Session implements SessionInterface,ServiceInterface
 
     private $id;
     private $start = false;
+    private $bottle;
     private $bottleName;
     /**
      * @var SessionStorage
@@ -31,11 +32,11 @@ class Session implements SessionInterface,ServiceInterface
     public function __construct(SessionStorage $storage = null,SessionBottle $bottle = null)
     {
         $this->storage = $storage ?: new SessionStorage();
-        $this->bottle = $bottle ?: new SessionBottle($storage);
+        $this->bottle = $bottle ?: new SessionBottle();
 
-        $this->bottleName = $bottle->getName();
+        $this->bottleName = $this->bottle->getName();
 
-        $this->register($bottle);
+        $this->register($this->bottle);
     }
 
     public function start()
@@ -108,5 +109,8 @@ class Session implements SessionInterface,ServiceInterface
         return 'http.session';
     }
 
-
+    public function getBottle()
+    {
+        return $this->storage->getBottle($this->bottleName);
+    }
 }

@@ -50,9 +50,7 @@ return array(
         ),
         'http.session' => array(
             'class'=>'Syph\\Http\\Session\\Session',
-            'strategy'=>'instance',
-            'args'=>array(
-            )
+            'strategy'=>'instance'
         ),
 		'cache' => array(
 			'class'=>'Syph\\Cache\\FileCache',
