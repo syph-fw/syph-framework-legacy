@@ -14,6 +14,9 @@ use Syph\DependencyInjection\Container\SyphContainer;
 class BaseController extends SyphContainer
 {
     public function get($id){
+        if('http.session' == $id){
+            return $this->container->get($id)->start();
+        }
         return $this->container->get($id);
     }
 }

@@ -13,6 +13,7 @@ interface SessionStorageInterface
 {
     public function load();
     public function start();
+    public function save();
     public function isStarted();
     public function registerBottle(SessionBottle $bottle);
 

@@ -100,7 +100,7 @@ class Session implements SessionInterface,ServiceInterface
 
     public function save()
     {
-        // TODO: Implement save() method.
+        $this->storage->save();
     }
 
     public function getName()

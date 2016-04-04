@@ -48,6 +48,12 @@ return array(
                 )
             )
         ),
+        'http.session' => array(
+            'class'=>'Syph\\Http\\Session\\Session',
+            'strategy'=>'instance',
+            'args'=>array(
+            )
+        ),
 		'cache' => array(
 			'class'=>'Syph\\Cache\\FileCache',
 			'strategy'=>'instance',

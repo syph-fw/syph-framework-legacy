@@ -54,6 +54,12 @@ class SessionStorage implements SessionStorageInterface
         $this->load();
     }
 
+    public function save()
+    {
+        session_write_close();
+        $this->isStart = false;
+    }
+
     public function isStarted()
     {
         return $this->isStart;
