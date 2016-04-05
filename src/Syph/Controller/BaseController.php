@@ -9,11 +9,16 @@
 namespace Syph\Controller;
 
 
-use Syph\Container\SyphContainer;
+use Syph\DependencyInjection\Container\SyphContainer;
 
 class BaseController extends SyphContainer
 {
     public function get($id){
+        if('http.session' == $id){
+            $session = $this->container->get($id);
+            $session->start();
+            return $session;
+        }
         return $this->container->get($id);
     }
 }

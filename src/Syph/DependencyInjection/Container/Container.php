@@ -1,6 +1,7 @@
 <?php
-namespace Syph\Container;
-use Syph\Container\Interfaces\ContainerInterface;
+namespace Syph\DependencyInjection\Container;
+use Interop\Container\ContainerInterface;
+use Syph\DependencyInjection\Container\Interfaces\ContainerInterface as SyphContainerInterface;
 use Syph\DependencyInjection\ServiceInterface;
 
 /**
@@ -9,7 +10,7 @@ use Syph\DependencyInjection\ServiceInterface;
  * Date: 26/08/2015
  * Time: 14:47
  */
-class Container implements ContainerInterface
+class Container implements ContainerInterface,SyphContainerInterface
 {
     public $service = array();
 
@@ -49,7 +50,7 @@ class Container implements ContainerInterface
         }
     }
 
-    public function load($services,$nameFather = null)
+    public function load($services)
     {
 
         foreach($services as $name => $service){
@@ -57,7 +58,7 @@ class Container implements ContainerInterface
             if(!$this->has($name)){
                 if(isset($service['args']) && count($service['args']) > 0){
                     foreach ($service['args'] as $argName=>$arg) {
-                        $this->load(array($argName=>$arg),$name);
+                        $this->load(array($argName=>$arg));
                         if($this->has($argName)){
 
                             $args[$name][] = $this->get($argName);
@@ -68,8 +69,6 @@ class Container implements ContainerInterface
                 $reflect = new \ReflectionClass($service['class']);
                 $serviceInstance = $reflect->newInstanceArgs((array_key_exists($name,$args))?$args[$name]:array());
                 $this->set($serviceInstance);
-            }else{
-                $args[$nameFather][] = $this->get($name);
             }
         }
     }

@@ -10,14 +10,23 @@ namespace Syph\AppBuilder;
 
 
 use Syph\AppBuilder\Interfaces\AppInterface;
-use Syph\Container\SyphContainer;
+use Syph\DependencyInjection\Container\SyphContainer;
 
 class App extends SyphContainer implements AppInterface
 {
     protected $name;
     protected $extension;
     protected $path;
+    protected $db_strategy;
+    protected $default_template_engine;
 
+    public function buildConfig()
+    {
+        if(file_exists('Config/config.php')){
+            $custom_config = include_once(realpath(dirname(__DIR__).'/Config/config.php'));
+        }
+    }
+    
     public function getName()
     {
         if (null !== $this->name) {
@@ -45,4 +54,22 @@ class App extends SyphContainer implements AppInterface
 
         return $this->path;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getDbStrategy()
+    {
+        return $this->db_strategy;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDefaultTemplateEngine()
+    {
+        return $this->default_template_engine;
+    }
+    
+    
 }

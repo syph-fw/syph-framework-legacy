@@ -1,6 +1,8 @@
 {
   "name": "sylabs/syph-framework",
   "description": "SyphFramework",
+  "type": "library",
+  "keywords": ["framework"],
   "minimum-stability": "stable",
   "license": "MIT",
   "authors": [
@@ -11,14 +13,18 @@
   ],
   "require": {
     "php": ">=5.3.17",
-    "twig/twig": "~1.0"
+    "twig/twig": "~1.0",
+    "container-interop/container-interop":"1.*"
   },
   "require-dev":{
     "phpunit/phpunit": "3.7.*"
   },
   "autoload" : {
-    "psr-0": {
-      "Syph\\": "src/"
-    }
+    "psr-4": {
+      "Syph\\": "src/Syph"
+    },
+    "files": [
+      "src/Syph/Helpers/functions.php"
+    ]
   }
 }

@@ -9,9 +9,9 @@
 namespace Syph\Controller;
 
 
-use Syph\Container\Container;
-use Syph\Container\Interfaces\SyphContainerInterface;
-use Syph\Container\SyphContainer;
+use Syph\DependencyInjection\Container\Container;
+use Syph\DependencyInjection\Container\Interfaces\SyphContainerInterface;
+use Syph\DependencyInjection\Container\SyphContainer;
 use Syph\DependencyInjection\ServiceInterface;
 use Syph\Http\Base\Request;
 
