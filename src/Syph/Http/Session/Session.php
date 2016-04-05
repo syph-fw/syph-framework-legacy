@@ -72,7 +72,7 @@ class Session implements SessionInterface,ServiceInterface
 
     public function get($name)
     {
-        $this->storage->getBottle($this->bottleName)->get($name);
+        return $this->storage->getBottle($this->bottleName)->get($name);
     }
 
     public function has($name)
@@ -91,7 +91,7 @@ class Session implements SessionInterface,ServiceInterface
 
     public function clear()
     {
-        $this->storage->getBottle($this->bottleName)->clear();
+        $this->storage->clear();
     }
 
     public function register($bottle)

@@ -122,8 +122,9 @@ class SessionBottle implements \IteratorAggregate
             unset($this->attributes[$name]);
     }
 
-    public function load($attr)
+    public function load(&$attr)
     {
-        $this->attributes = $attr;
+
+        $this->attributes = &$attr;
     }
 }

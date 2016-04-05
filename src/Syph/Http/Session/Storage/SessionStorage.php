@@ -35,6 +35,14 @@ class SessionStorage implements SessionStorageInterface
      */
     public function __construct(SessionMetaBottle $metaBottle = null)
     {
+        ini_set('session.use_cookies', 1);
+
+        if (PHP_VERSION_ID >= 50400) {
+            session_register_shutdown();
+        } else {
+            register_shutdown_function('session_write_close');
+        }
+
         if (null === $metaBottle) {
             $metaBottle = new SessionMetaBottle();
         }
@@ -109,12 +117,12 @@ class SessionStorage implements SessionStorageInterface
     }
 
     public function load(){
+        $session = &$_SESSION;
 
         foreach ($this->bottles as $bottle) {
             $key = $bottle->getStorageId();
-            $_SESSION[$key] = isset($_SESSION[$key]) ? $_SESSION[$key] : array();
-            $bottle->load($_SESSION[$key]);
+            $session[$key] = isset($session[$key]) ? $session[$key] : array();
+            $bottle->load($session[$key]);
         }
-
     }
 }
