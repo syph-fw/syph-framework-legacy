@@ -97,8 +97,12 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
     }
 
     private function getCustomList(){
-        $list = require_once $this->syphAppDir.'/../global/services.php';
-        return $list['services'];
+        $pathCustomServices = $this->syphAppDir.'/../global/services.php';
+        if(file_exists($pathCustomServices)) {
+            $list = require_once $pathCustomServices;
+            return $list['services'];
+        }
+        return array();
     }
 
     public function getSyphAppDir(){
