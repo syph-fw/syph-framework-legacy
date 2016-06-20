@@ -16,11 +16,11 @@ class Container implements ContainerInterface,SyphContainerInterface
 
     public function __construct($kernel)
     {
+        $this->service['container'] = $this;
         $this->service['kernel'] = $kernel;
     }
 
     public function startContainer(array $mainServices = array()){
-        $this->service['container'] = $this;
         $this->load($mainServices);
     }
 
@@ -52,7 +52,7 @@ class Container implements ContainerInterface,SyphContainerInterface
 
     public function load($services)
     {
-
+        //var_dump($services);
         foreach($services as $name => $service){
             $args = array();
             if(!$this->has($name)){

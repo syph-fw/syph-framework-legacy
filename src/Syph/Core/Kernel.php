@@ -37,6 +37,7 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
 
     public function __construct(Request $request = null)
     {
+
         if(null === $request){
             $this->mode = 'CLI';
             $request = Request::create($this->mode);

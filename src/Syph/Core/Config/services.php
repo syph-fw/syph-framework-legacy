@@ -56,6 +56,13 @@ return array(
 			'class'=>'Syph\\Cache\\FileCache',
 			'strategy'=>'instance',
 		),
+        'logger' => array(
+            'class'=>'Syph\\Log\\SyphLogger',
+            'strategy'=>'instance',
+            'args'=>array(
+                'kernel' => array()
+            )
 
+        ),
     )
 );
