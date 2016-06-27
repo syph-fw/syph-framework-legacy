@@ -10,6 +10,8 @@ namespace Syph\Controller;
 
 
 use Syph\DependencyInjection\Container\SyphContainer;
+use Syph\View\Exceptions\ViewNotRenderableException;
+use Syph\View\Interfaces\RendererInterface;
 
 class BaseController extends SyphContainer
 {
@@ -20,5 +22,24 @@ class BaseController extends SyphContainer
             return $session;
         }
         return $this->container->get($id);
+    }
+
+    /**
+     * @param $view
+     * @return RendererInterface
+     * @throws ViewNotRenderableException
+     */
+    public function createView($view)
+    {
+        try
+        {
+            $renderer = $this->get('view.renderer');
+            return $renderer->run($view);
+        }
+        catch (ViewNotRenderableException $e)
+        {
+            throw $e;
+        }
+
     }
 }

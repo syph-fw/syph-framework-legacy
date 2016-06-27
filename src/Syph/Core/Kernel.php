@@ -32,6 +32,7 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
      */
     protected $container;
     protected $syphAppDir;
+    protected $syphAppLoggDir;
 
     const VERSION = '0.1';
 
@@ -160,6 +161,15 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
         }
 
         return $this->syphAppDir;
+    }
+
+    public function getSyphAppLoggDir()
+    {
+        if (null === $this->syphAppLoggDir) {
+            $p = $this->getSyphAppDir();
+            $this->syphAppLoggDir = $p.DS.'..'.DS.'storage'.DS.'logs';
+        }
+        return $this->syphAppLoggDir;
     }
 
     public function handleRequest(BuilderInterface $builder = null)

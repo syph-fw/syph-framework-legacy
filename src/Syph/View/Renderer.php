@@ -35,6 +35,7 @@ class Renderer implements RendererInterface,ServiceInterface
     {
         $this->template = $file;
         $this->extractFileInfo($file);
+        return $this;
     }
 
     public function loadContent($filename,$vars)
