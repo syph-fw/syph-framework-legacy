@@ -178,8 +178,11 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
         if($this->isBooted) {
             //$this->loadBuilder($builder)->register($this->env);
         }
-
-        return $this->getHttp()->run($this->container->get('http.request'));
+        try {
+            return $this->getHttp()->run($this->container->get('http.request'));
+        }catch (\Exception $e){
+            throw $e;
+        }
     }
 
     private function loadBuilder($builder){

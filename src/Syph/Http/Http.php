@@ -13,6 +13,7 @@ use Syph\Http\Base\Request;
 use Syph\Http\Interfaces\HttpInterface;
 use Syph\Http\Base\HttpVerbose\RequestGet;
 use Syph\Http\Base\HttpVerbose\RequestPost;
+use Syph\Http\Response\Response;
 
 class Http implements HttpInterface, ServiceInterface
 {
@@ -48,13 +49,14 @@ class Http implements HttpInterface, ServiceInterface
         if (false === $controller = $this->solveController->getController($request)) {
             throw new \Exception(sprintf('Unable to find the controller for path "%s". The route is wrongly configured.', $request->getPathInfo()));
         }
+        
         // controller arguments
         $arguments = $this->solveController->getArgs($request, $controller);
 
         // call controller
         $response = call_user_func_array($controller, $arguments);
 
-        return $response;
+        return new Response($response);
     }
 
     public function getRequest(){
