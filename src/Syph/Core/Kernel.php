@@ -15,6 +15,7 @@ use Syph\DependencyInjection\Container\Container;
 use Syph\Core\Interfaces\SyphKernelInterface;
 use Syph\AppBuilder\Interfaces\BuilderInterface;
 use Syph\DependencyInjection\ServiceInterface;
+use Syph\Exception\ExceptionHandler;
 use Syph\Http\Base\Request;
 use Syph\Http\Http;
 use Syph\Routing\Router;
@@ -181,8 +182,15 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
         try {
             return $this->getHttp()->run($this->container->get('http.request'));
         }catch (\Exception $e){
-            throw $e;
+            return $this->handleException($e);
         }
+    }
+
+    private function handleException(\Exception $e)
+    {
+        $handler = new ExceptionHandler();
+        $handler->buildResponse($e);
+        return $handler->getResponse();
     }
 
     private function loadBuilder($builder){
