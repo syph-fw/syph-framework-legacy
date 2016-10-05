@@ -14,6 +14,7 @@ use Syph\Console\ConsoleApp;
 use Syph\DependencyInjection\Container\Container;
 use Syph\Core\Interfaces\SyphKernelInterface;
 use Syph\AppBuilder\Interfaces\BuilderInterface;
+use Syph\DependencyInjection\Container\OmniContainer;
 use Syph\DependencyInjection\ServiceInterface;
 use Syph\Exception\ExceptionHandler;
 use Syph\Http\Base\Request;
@@ -35,7 +36,7 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
     protected $syphAppDir;
     protected $syphAppLoggDir;
 
-    const VERSION = '0.1';
+    const VERSION = '0.7';
 
     public function __construct(Request $request = null)
     {
@@ -54,17 +55,31 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
     private function boot(Request $request)
     {
 //        $this->env = $env;
-        $this->syphAppDir = $this->getSyphAppDir();
 
-        $this->initClassLoader();
-        $this->initApps();
-        $this->initContainer($request);
-        $this->bindContainerApps();
-        if (!$this->mode == 'CLI'){
-            $this->bindRouterRequest();
+        try{
+            $this->syphAppDir = $this->getSyphAppDir();
+
+            $this->initClassLoader();
+            $this->initApps();
+            $this->initContainer($request);
+            $this->initFunctions();
+            $this->bindContainerApps();
+
+            if (!$this->mode == 'CLI'){
+                $this->bindRouterRequest();
+            }
+
+            $this->isBooted = true;
+        }catch (\Exception $e){
+            throw $e;
         }
 
-        $this->isBooted = true;
+    }
+
+
+    private function initFunctions()
+    {
+        include_once(realpath(dirname(__FILE__)).'/../Helpers/functions.php');
     }
 
     private function initClassLoader()
@@ -96,10 +111,14 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
 
     private function initContainer(Request $request)
     {
+
         $this->container = new Container($this);
         $this->container->set($request);
         $this->container->startContainer($this->getServiceList());
         $this->container->loadCustomContainer($this->getCustomList());
+
+        $omniContainer = OmniContainer::getInstance();
+        $omniContainer->setContainer($this->container);
 
     }
 
@@ -218,5 +237,6 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
     public function getName(){
         return 'kernel';
     }
+
 
 }

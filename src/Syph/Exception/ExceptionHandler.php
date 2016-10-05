@@ -13,6 +13,9 @@ use Syph\Http\Response\Response;
 
 class ExceptionHandler
 {
+    /**
+     * @var Response $response
+     */
     private $response;
 
     /**

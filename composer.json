@@ -25,9 +25,6 @@
   "autoload" : {
     "psr-4": {
       "Syph\\": "src/Syph"
-    },
-    "files": [
-      "src/Syph/Helpers/functions.php"
-    ]
+    }
   }
 }
