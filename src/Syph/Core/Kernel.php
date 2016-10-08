@@ -11,6 +11,7 @@ namespace Syph\Core;
 use Syph\AppBuilder\AppBuilder;
 use Syph\Autoload\ClassLoader;
 use Syph\Console\ConsoleApp;
+use Syph\Core\Events\KernelBootEvent;
 use Syph\DependencyInjection\Container\Container;
 use Syph\Core\Interfaces\SyphKernelInterface;
 use Syph\AppBuilder\Interfaces\BuilderInterface;
@@ -33,6 +34,7 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
      * @var Container $container
      */
     protected $container;
+    protected $dispatcher;
     protected $syphAppDir;
     protected $syphAppLoggDir;
 
@@ -63,6 +65,7 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
             $this->initApps();
             $this->initContainer($request);
             $this->initFunctions();
+            $this->initEventDispatcher();
             $this->bindContainerApps();
 
             if (!$this->mode == 'CLI'){
@@ -73,9 +76,14 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
         }catch (\Exception $e){
             throw $e;
         }
-
+        $this->dispatcher->dispatch('kernel.boot', new KernelBootEvent($this));
     }
 
+    private function initEventDispatcher()
+    {
+        $this->dispatcher = $this->container->get('event.dispatcher');
+        $this->dispatcher->loadContainerListeners();
+    }
 
     private function initFunctions()
     {
@@ -237,6 +245,8 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
     public function getName(){
         return 'kernel';
     }
+
+
 
 
 }

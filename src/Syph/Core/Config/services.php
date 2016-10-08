@@ -38,6 +38,23 @@ return array(
                 )
             )
         ),
+        'event.dispatcher' => array(
+            'class'=>'Syph\\EventDispatcher\\EventDispatcher',
+            'strategy'=>'instance',
+            'args'=>array(
+                'container' => array(
+                    'class'=>'Syph\\Container\\Container',
+                    'strategy'=>'instance',
+                )
+            )
+        ),
+        'kernel.boot.listener' => array(
+            'class'=>'Syph\\Core\\EventListeners\\KernelBootListener',
+            'strategy'=>'event_listener',
+            'args'=> array(
+                'name'=>'routing.router'
+            )
+        ),
         'view.renderer' => array(
             'class'=>'Syph\\View\\Renderer',
             'strategy'=>'instance',

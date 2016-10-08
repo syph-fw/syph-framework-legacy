@@ -48,7 +48,7 @@ class Renderer implements RendererInterface,ServiceInterface
     {
         switch($this->extenssion){
             case 'twig':
-                $loader = new \Twig_Loader_Filesystem($this->view_path);
+                $loader = new \Twig_Loader_Filesystem(realpath($this->view_path));
                 $twig = new \Twig_Environment($loader,array('debug' => true,));
                 $twig->addExtension(new \Twig_Extension_Debug());
                 $twig->addExtension(new AssetsExtension($this->baseUrl));
