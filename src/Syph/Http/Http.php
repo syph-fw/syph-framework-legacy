@@ -55,7 +55,7 @@ class Http implements HttpInterface, ServiceInterface
 
         // call controller
         $response = call_user_func_array($controller, $arguments);
-
+        
         return new Response($response);
     }
 

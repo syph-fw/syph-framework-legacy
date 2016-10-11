@@ -27,9 +27,11 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
     protected $apps = array();
     protected $isBooted;
     protected $env;
+    protected $start;
     protected $mode;
     protected $http;
     protected $builder;
+    protected $global_configs = [];
     /**
      * @var Container $container
      */
@@ -38,11 +40,11 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
     protected $syphAppDir;
     protected $syphAppLoggDir;
 
-    const VERSION = '0.7';
+    const VERSION = '0.8';
 
     public function __construct(Request $request = null)
     {
-
+        $this->start = microtime(true);
         if(null === $request){
             $this->mode = 'CLI';
             $request = Request::create($this->mode);
@@ -61,6 +63,7 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
         try{
             $this->syphAppDir = $this->getSyphAppDir();
 
+            $this->loadGlobalConfigs();
             $this->initClassLoader();
             $this->initApps();
             $this->initContainer($request);
@@ -111,7 +114,8 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
             if (isset($this->apps[$name])) {
                 throw new \LogicException(sprintf('You trying to register two apps with the same name "%s"', $name));
             }
-            $app->buildConfig();
+            $app->buildConfig($this->global_configs);
+
             $this->apps[$name] = $app;
         }
 
@@ -167,7 +171,13 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
         }
 
     }
-
+    private function loadGlobalConfigs()
+    {
+        $pathGlobalConfigs = $this->syphAppDir.'/../global/config.php';
+        if(file_exists($pathGlobalConfigs)) {
+            $this->global_configs = require_once $pathGlobalConfigs;
+        }
+    }
     private function getServiceList(){
         $list = require_once 'Config/services.php';
         return $list['services'];
@@ -207,7 +217,9 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
             //$this->loadBuilder($builder)->register($this->env);
         }
         try {
-            return $this->getHttp()->run($this->container->get('http.request'));
+            $response = $this->getHttp()->run($this->container->get('http.request'));
+            
+            return $response;
         }catch (\Exception $e){
             return $this->handleException($e);
         }

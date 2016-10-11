@@ -10,7 +10,7 @@ namespace Syph\AppBuilder\Interfaces;
 
 
 interface AppInterface {
-    public function buildConfig();
+    public function buildConfig($global_configs = array());
     public function getName();
     public function getNamespace();
     public function getPath();
