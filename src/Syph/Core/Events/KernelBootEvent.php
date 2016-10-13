@@ -9,23 +9,28 @@
 namespace Syph\Core\Events;
 
 
-use Syph\Core\Interfaces\SyphKernelInterface;
+use Interop\Container\ContainerInterface;
 use Syph\EventDispatcher\Interfaces\EventInterface;
+use Syph\Http\Session\Session;
 
 class KernelBootEvent implements EventInterface
 {
 
-    private $kernel;
+    private $container;
 
     /**
      * KernelBootEvent constructor.
      * @param $kernel
      */
-    public function __construct(SyphKernelInterface $kernel)
+    public function __construct(ContainerInterface $container)
     {
-        $this->kernel = $kernel;
+        $this->container = $container;
     }
 
+    public function getSession()
+    {
+        return $this->container->get(Session::SERVICE_NAME);
+    }
 
     public function getInfo()
     {

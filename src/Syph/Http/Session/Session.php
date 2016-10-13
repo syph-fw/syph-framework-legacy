@@ -15,8 +15,8 @@ use Syph\Http\Session\Storage\SessionStorage;
 
 class Session implements SessionInterface,ServiceInterface
 {
-
-    private $id;
+    const SERVICE_NAME = 'http.session';
+    private $id = 'syph_session';
     private $start = false;
     private $bottle;
     private $bottleName;
@@ -37,11 +37,14 @@ class Session implements SessionInterface,ServiceInterface
         $this->bottleName = $this->bottle->getName();
 
         $this->register($this->bottle);
+        $this->start();
     }
 
     public function start()
     {
-        $this->storage->start();
+        $this->storage->start($this->id);
+
+        $this->start = true;
     }
 
 
@@ -77,7 +80,7 @@ class Session implements SessionInterface,ServiceInterface
 
     public function has($name)
     {
-        $this->storage->getBottle($this->bottleName)->has($name);
+        return $this->storage->getBottle($this->bottleName)->has($name);
     }
 
     public function getAll()
@@ -106,11 +109,19 @@ class Session implements SessionInterface,ServiceInterface
 
     public function getName()
     {
-        return 'http.session';
+        return self::SERVICE_NAME;
     }
 
     public function getBottle()
     {
         return $this->storage->getBottle($this->bottleName);
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isStart()
+    {
+        return $this->start;
     }
 }

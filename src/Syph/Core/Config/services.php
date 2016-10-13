@@ -48,12 +48,24 @@ return array(
                 )
             )
         ),
+        'http.session' => array(
+            'class'=>'Syph\\Http\\Session\\Session',
+            'strategy'=>'instance'
+        ),
         'kernel.boot.listener' => array(
             'class'=>'Syph\\Core\\EventListeners\\KernelBootListener',
             'strategy'=>'event_listener',
             'args'=> array(
                 'name'=>'routing.router'
             )
+        ),
+        'request.start.listener' => array(
+            'class'=>'Syph\\Core\\EventListeners\\RequestStartListener',
+            'strategy'=>'event_listener'
+        ),
+        'firewall.provider' => array(
+            'class'=>'Syph\\Security\\Firewall\\FirewallProvider',
+            'strategy'=>'event_listener'
         ),
         'view.renderer' => array(
             'class'=>'Syph\\View\\Renderer',
@@ -65,9 +77,9 @@ return array(
                 )
             )
         ),
-        'http.session' => array(
-            'class'=>'Syph\\Http\\Session\\Session',
-            'strategy'=>'instance'
+        'security.authentication.checker' => array(
+            'class'=>'Syph\\Security\\Auth\\AuthenticationCheker',
+            'strategy'=>'event_listener'
         ),
 		'cache' => array(
 			'class'=>'Syph\\Cache\\FileCache',

@@ -12,6 +12,8 @@ use Syph\AppBuilder\AppBuilder;
 use Syph\Autoload\ClassLoader;
 use Syph\Console\ConsoleApp;
 use Syph\Core\Events\KernelBootEvent;
+use Syph\Core\Events\KernelEventList;
+use Syph\Core\Events\RequestStartEvent;
 use Syph\DependencyInjection\Container\Container;
 use Syph\Core\Interfaces\SyphKernelInterface;
 use Syph\AppBuilder\Interfaces\BuilderInterface;
@@ -63,12 +65,12 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
         try{
             $this->syphAppDir = $this->getSyphAppDir();
 
-            $this->loadGlobalConfigs();
             $this->initClassLoader();
-            $this->initApps();
             $this->initContainer($request);
-            $this->initFunctions();
             $this->initEventDispatcher();
+            $this->loadGlobalConfigs();
+            $this->initApps();
+            $this->initFunctions();
             $this->bindContainerApps();
 
             if (!$this->mode == 'CLI'){
@@ -79,7 +81,7 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
         }catch (\Exception $e){
             throw $e;
         }
-        $this->dispatcher->dispatch('kernel.boot', new KernelBootEvent($this));
+        $this->dispatcher->dispatch(KernelEventList::KERNEL_BOOTED, new KernelBootEvent($this->container));
     }
 
     private function initEventDispatcher()
@@ -217,6 +219,9 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
             //$this->loadBuilder($builder)->register($this->env);
         }
         try {
+            $this->dispatcher->dispatch(KernelEventList::REQUEST_HANDLE, new RequestStartEvent(
+                $this->container->get('http.request'),$this->container->get('routing.router')
+            ));
             $response = $this->getHttp()->run($this->container->get('http.request'));
             
             return $response;

@@ -12,7 +12,7 @@ namespace Syph\Http\Session\Storage;
 interface SessionStorageInterface
 {
     public function load();
-    public function start();
+    public function start($name = null);
     public function save();
     public function isStarted();
     public function registerBottle(SessionBottle $bottle);

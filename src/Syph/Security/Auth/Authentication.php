@@ -11,5 +11,5 @@ namespace Syph\Security\Auth;
 
 class Authentication
 {
-
+    const AUTH_ROLE_ANONYMOUSLY = 'anonymous';
 }

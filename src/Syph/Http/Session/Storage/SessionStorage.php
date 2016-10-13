@@ -54,11 +54,16 @@ class SessionStorage implements SessionStorageInterface
     }
 
 
-    public function start()
+    public function start($name = null)
     {
+        if(!is_null($name)){
+            session_name($name);
+        }
+
         if (!session_start()) {
             throw new \RuntimeException('Failed to start the session');
         }
+
         $this->load();
     }
 

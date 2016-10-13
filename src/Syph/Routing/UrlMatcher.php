@@ -14,7 +14,7 @@ use Syph\DependencyInjection\ServiceInterface;
 class UrlMatcher implements ServiceInterface{
 
     private $patterns;
-
+    private $route_match;
 	public function __construct(){
         $this->initPatterns();
     }
@@ -28,7 +28,7 @@ class UrlMatcher implements ServiceInterface{
             if (preg_match($pattern, $url, $params))
             {
                 array_shift($params);
-
+                $this->route_match = $route;
                 return call_user_func_array($route->getCallback(), array_values($params));
             }
         }
@@ -54,6 +54,11 @@ class UrlMatcher implements ServiceInterface{
 
     public function isValidRoute(Route $route){
         return $route->getPattern() && is_callable($route->getCallback());
+    }
+
+    public function getRouteMatch()
+    {
+        return $this->route_match;
     }
 
     public function getName()

@@ -50,10 +50,10 @@ class Http implements HttpInterface, ServiceInterface
             throw new \Exception(sprintf('Unable to find the controller for path "%s". The route is wrongly configured.', $request->getPathInfo()));
         }
         
-        // controller arguments
+
         $arguments = $this->solveController->getArgs($request, $controller);
 
-        // call controller
+
         $response = call_user_func_array($controller, $arguments);
         
         return new Response($response);

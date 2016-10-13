@@ -72,4 +72,8 @@ class Router implements ServiceInterface
     public function setStatus($status){
         $this->status = $status;
     }
+
+    public function getMatcher(){
+        return $this->matcher;
+    }
 }
