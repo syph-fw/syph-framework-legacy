@@ -29,7 +29,10 @@ class KernelBootEvent implements EventInterface
 
     public function getSession()
     {
-        return $this->container->get(Session::SERVICE_NAME);
+        if($this->container->has(Session::SERVICE_NAME)){
+            return $this->container->get(Session::SERVICE_NAME);
+        }
+        return null;
     }
 
     public function getInfo()
