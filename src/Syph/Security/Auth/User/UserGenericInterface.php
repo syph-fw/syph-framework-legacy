@@ -6,7 +6,7 @@
  * Time: 23:40
  */
 
-namespace Syph\Security\Auth;
+namespace Syph\Security\Auth\User;
 
 
 interface UserGenericInterface

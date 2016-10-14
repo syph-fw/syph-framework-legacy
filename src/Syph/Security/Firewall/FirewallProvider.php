@@ -42,6 +42,6 @@ class FirewallProvider implements EventListernerInterface,ServiceInterface
 
     public function build(RequestStartEvent $event)
     {
-        $this->firewall = new Firewall($event->getRequest(),$event->getRouter());
+        //$this->firewall = new Firewall($event->getRequest(),$event->getRouter());
     }
 }

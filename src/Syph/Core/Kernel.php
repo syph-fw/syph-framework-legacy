@@ -66,9 +66,9 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
             $this->syphAppDir = $this->getSyphAppDir();
 
             $this->initClassLoader();
+            $this->loadGlobalConfigs();
             $this->initContainer($request);
             $this->initEventDispatcher();
-            $this->loadGlobalConfigs();
             $this->initApps();
             $this->initFunctions();
             $this->bindContainerApps();
@@ -128,7 +128,7 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
 
         $this->container = new Container($this);
         $this->container->set($request);
-        $this->container->startContainer($this->getServiceList());
+        $this->container->startContainer($this->global_configs['services']);
         $this->container->loadCustomContainer($this->getCustomList());
 
         $omniContainer = OmniContainer::getInstance();
@@ -175,15 +175,33 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
     }
     private function loadGlobalConfigs()
     {
-        $pathGlobalConfigs = $this->syphAppDir.'/../global/config.php';
-        if(file_exists($pathGlobalConfigs)) {
-            $this->global_configs = require_once $pathGlobalConfigs;
+        $this->loadInternalConfigs();
+    }
+
+    private function loadInternalConfigs()
+    {
+        $globalConfig = [];
+        $pathGlobalConfigs = realpath(dirname(__FILE__)).'/Config/';
+        $extGlobalConfigs = '.php';
+        $globalFiles = require_once $pathGlobalConfigs.'configs'.$extGlobalConfigs;
+        if(is_array($globalFiles)){
+            if(count($globalFiles) > 0){
+                foreach ($globalFiles as $globalFile) {
+                    $globalFile .= $extGlobalConfigs;
+                    if(file_exists($pathGlobalConfigs.$globalFile)) {
+                        $config = require_once $pathGlobalConfigs.$globalFile;
+                        $globalConfig = array_merge($globalConfig,$config);
+                    }
+                }
+            }
         }
+        $this->global_configs = $globalConfig;
     }
-    private function getServiceList(){
-        $list = require_once 'Config/services.php';
-        return $list['services'];
-    }
+
+//    private function getServiceList(){
+//        $list = require_once 'Config/services.php';
+//        return $list['services'];
+//    }
 
     private function getCustomList(){
         $pathCustomServices = $this->syphAppDir.'/../global/services.php';
@@ -263,7 +281,19 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
         return 'kernel';
     }
 
+    public function getConfig($name = null)
+    {
+        if(null === $name)
+        {
+            return $this->global_configs;
+        }
 
+        if (array_key_exists($name,$this->global_configs))
+        {
+            return $this->global_configs[$name];
+        }
+        return null;
+    }
 
 
 }

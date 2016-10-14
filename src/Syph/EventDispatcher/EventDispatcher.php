@@ -11,6 +11,7 @@ namespace Syph\EventDispatcher;
 
 use Syph\DependencyInjection\Container\Container;
 use Syph\DependencyInjection\ServiceInterface;
+use Syph\EventDispatcher\Exception\NotListedEventException;
 use Syph\EventDispatcher\Interfaces\EventDispatcherInterface;
 use Syph\EventDispatcher\Interfaces\EventInterface;
 use Syph\EventDispatcher\Interfaces\EventListernerInterface;
@@ -48,9 +49,14 @@ class EventDispatcher implements EventDispatcherInterface,ServiceInterface
     public function dispatch($eventName, EventInterface $event)
     {
         //sd($this->listeners);
-        foreach ($this->listeners[$eventName] as $listener)
-        {
-            call_user_func_array($listener, array($event));
+        if(array_key_exists($eventName,$this->listeners)){
+
+            foreach ($this->listeners[$eventName] as $listener)
+            {
+                call_user_func_array($listener, array($event));
+            }
+        }else{
+            throw new NotListedEventException($eventName);
         }
     }
 

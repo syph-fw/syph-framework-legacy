@@ -37,8 +37,9 @@ class AuthenticationCheker implements EventListernerInterface,ServiceInterface
          * @var Session $session
          */
         $session = $event->getSession();
+        $request = $event->getRequest();
         $this->checkSession($session);
-        
+        $this->checkAuthenticatedUser($request);
 
     }
 
@@ -72,7 +73,12 @@ class AuthenticationCheker implements EventListernerInterface,ServiceInterface
             $session->set('user_signed',Authentication::AUTH_ROLE_ANONYMOUSLY);
             $this->setUserSigned(Authentication::AUTH_ROLE_ANONYMOUSLY);
         }else{
-            $session->get('token');
+            //$session->get('token');
         }
+    }
+
+    private function checkAuthenticatedUser($request)
+    {
+        
     }
 }

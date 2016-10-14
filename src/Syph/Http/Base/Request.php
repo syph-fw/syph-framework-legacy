@@ -15,7 +15,7 @@ use Syph\Http\Base\HttpVerbose\HttpVerbose;
 use Syph\Http\Base\HttpVerbose\Server;
 
 class Request implements ServiceInterface{
-
+    const SERVICE_NAME = 'http.request';
     const CLIENT_IP = 'client_ip';
     const CLIENT_HOST = 'client_host';
     const CLIENT_PROTO = 'client_proto';
@@ -465,6 +465,6 @@ class Request implements ServiceInterface{
 
     public function getName()
     {
-        return 'http.request';
+        return self::SERVICE_NAME;
     }
 }

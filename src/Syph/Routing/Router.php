@@ -10,6 +10,7 @@ use Syph\DependencyInjection\ServiceInterface;
  */
 class Router implements ServiceInterface
 {
+    const SERVICE_NAME = 'routing.router';
     private $routes = array();
     /**
      * @var null|UrlMatcher
@@ -52,7 +53,7 @@ class Router implements ServiceInterface
 
     public function getName()
     {
-        return 'routing.router';
+        return self::SERVICE_NAME;
     }
 
     public function loadStatus()
