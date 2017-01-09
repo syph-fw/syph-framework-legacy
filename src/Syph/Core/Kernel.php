@@ -167,9 +167,9 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
          */
         $request = $this->container->get('http.request');
         if($request->get->has('path')){
-            $request->setAttributes($router->match($request->get->get('path')));
+            $request->setAttributes($router->match($request->method,$request->get->get('path')));
         }else{
-            $request->setAttributes($router->match('/'));
+            $request->setAttributes($router->match('GET','/'));
         }
 
     }

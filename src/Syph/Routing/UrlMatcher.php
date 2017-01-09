@@ -10,6 +10,7 @@ namespace Syph\Routing;
 
 
 use Syph\DependencyInjection\ServiceInterface;
+use Syph\Routing\Exceptions\RouterException;
 
 class UrlMatcher implements ServiceInterface{
 
@@ -19,17 +20,37 @@ class UrlMatcher implements ServiceInterface{
         $this->initPatterns();
     }
 
-    public function match($url,$collection){
+    public function match($type,$url,$collection){
 
         $url = (substr($url,0,1) == '/')? $url : '/'.$url ;
+        /**
+         * @var Route $route
+         */
         foreach ($collection as $name => $route)
         {
             $pattern = '/^' . str_replace('/', '\/', $route->getPattern()) . '$/';
+
             if (preg_match($pattern, $url, $params))
             {
                 array_shift($params);
                 $this->route_match = $route;
-                return call_user_func_array($route->getCallback(), array_values($params));
+
+                if($type !== $route->getRequestType() && $route->getRequestType() != 'ANY'){
+                    throw new RouterException('This route, not allowed this request type');
+                }
+
+                if($route->isStringReference()){
+                    $route->fillParams($params);
+                    $controller = $route->getStringController();
+                    $args = $route->getFilledParams();
+                    $callback = function () use ($controller,$args){
+                        return ['controller' => $controller,'args'=>$args];
+                    };
+
+                }else{
+                    $callback = $route->getCallback();
+                }
+                return call_user_func_array($callback, array_values($params));
             }
         }
         throw new \Exception(sprintf('Route: "%s" not found',$url));
@@ -53,7 +74,8 @@ class UrlMatcher implements ServiceInterface{
     }
 
     public function isValidRoute(Route $route){
-        return $route->getPattern() && is_callable($route->getCallback());
+//        return $route->getPattern() && is_callable($route->getCallback());
+        return $route->getPattern();
     }
 
     public function getRouteMatch()

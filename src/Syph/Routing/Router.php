@@ -42,8 +42,8 @@ class Router implements ServiceInterface
         $this->routes[$name] = $route;
     }
 
-    public function match($url){
-        return $this->matcher->match($url,$this->routes);
+    public function match($type,$url){
+        return $this->matcher->match($type,$url,$this->routes);
 
     }
 

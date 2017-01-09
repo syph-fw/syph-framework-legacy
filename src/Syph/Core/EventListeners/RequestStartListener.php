@@ -43,6 +43,5 @@ class RequestStartListener implements EventListernerInterface, ServiceInterface
     public function runFirewall(RequestStartEvent $requestStartEvent){
         $this->request = $requestStartEvent->getRequest();
         $this->router = $requestStartEvent->getRouter();
-        
     }
 }

@@ -22,7 +22,7 @@ class Firewall implements ServiceInterface
     /**
      * Firewall constructor.
      */
-    public function __construct(Request $request, Router $router, SecurityProfile $profile)
+    public function __construct(Request $request, Router $router, SecurityProfile $profile = null)
     {
         $this->loadSecurityConfig($profile);
         $this->run($router);
@@ -38,7 +38,7 @@ class Firewall implements ServiceInterface
         return self::SERVICE_NAME;
     }
 
-    private function loadSecurityConfig(SecurityProfile $profile)
+    private function loadSecurityConfig(SecurityProfile $profile = null)
     {
         
     }

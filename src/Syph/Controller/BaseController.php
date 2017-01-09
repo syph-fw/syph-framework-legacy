@@ -10,6 +10,7 @@ namespace Syph\Controller;
 
 
 use Syph\DependencyInjection\Container\SyphContainer;
+use Syph\Http\Base\Request;
 use Syph\View\Exceptions\ViewNotRenderableException;
 use Syph\View\Interfaces\RendererInterface;
 
@@ -41,5 +42,13 @@ class BaseController extends SyphContainer
             throw $e;
         }
 
+    }
+
+    /**
+     * @return Request
+     */
+    public function getRequest()
+    {
+        return $this->container->get('http.request');
     }
 }

@@ -134,7 +134,7 @@ class Request implements ServiceInterface{
     /**
      * @var string
      */
-    protected $method;
+    public $method;
 
     /**
      * @var string
@@ -184,7 +184,7 @@ class Request implements ServiceInterface{
         $this->requestUri = null;
         $this->baseUrl = null;
         $this->basePath = null;
-        $this->method = null;
+        $this->method = $server['REQUEST_METHOD'];
         $this->format = null;
 
     }
