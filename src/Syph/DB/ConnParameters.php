@@ -13,6 +13,8 @@ use Syph\DB\Interfaces\ConnParametersInterface;
 
 class ConnParameters implements ConnParametersInterface
 {
+    private $env;
+    private $database;
     private $name;
     private $host;
     private $user;
@@ -21,18 +23,21 @@ class ConnParameters implements ConnParametersInterface
 
     /**
      * ConnParameters constructor.
+     * @param $database
      * @param $host
      * @param $user
      * @param $pass
      * @param $db
      */
-    public function __construct($name = null,$host = null, $user = null, $pass = null, $db = null)
+    public function __construct($env = null,$database = null,$name = null,$host = null, $user = null, $pass = null, $db = null)
     {
-        $this->name = $name;
-        $this->host = $host;
-        $this->user = $user;
-        $this->pass = $pass;
-        $this->db = $db;
+        $this->env      = $env;
+        $this->database = $database;
+        $this->name     = $name;
+        $this->host     = $host;
+        $this->user     = $user;
+        $this->pass     = $pass;
+        $this->db       = $db;
     }
 
     /**
@@ -115,6 +120,46 @@ class ConnParameters implements ConnParametersInterface
         return $this->name;
     }
 
+    public function getStrToPDO()
+    {
+        return sprintf('%s://%s:%s@%s/%s',$this->database,$this->user,$this->pass,$this->host,$this->db);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEnv()
+    {
+        return $this->env;
+    }
+
+    /**
+     * @param mixed $env
+     * @return ConnParameters
+     */
+    public function setEnv($env)
+    {
+        $this->env = $env;
+        return $this;
+    }
+
+    /**
+     * @return null
+     */
+    public function getDatabase()
+    {
+        return $this->database;
+    }
+
+    /**
+     * @param null $database
+     * @return ConnParameters
+     */
+    public function setDatabase($database)
+    {
+        $this->database = $database;
+        return $this;
+    }
 
 
 }

@@ -93,5 +93,13 @@ return array(
             )
 
         ),
+        'db.core' => array(
+            'class'=>'Syph\\DB\\DB',
+            'strategy'=>'instance',
+            'args'=>array(
+                'kernel' => array()
+            )
+
+        ),
     )
 );

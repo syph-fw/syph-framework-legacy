@@ -21,12 +21,17 @@ class App extends SyphContainer implements AppInterface
     protected $default_template_engine;
     public static $custom_config;
 
-    public function buildConfig($global_configs = array())
+    public function buildConfig($accept_configs,$global_configs = array())
     {
-        if(file_exists($this->getPath().DS.'Config/config.php')){
-            $custom_config = include_once($this->getPath().DS.'Config/config.php');
-            static::$custom_config = array_merge($global_configs,$custom_config);
+
+        foreach (new \DirectoryIterator($this->getPath().DS.'Config/') as $file) {
+            if ($file->isFile() && in_array($file->getBasename('.php'),$accept_configs)) {
+                $custom_config = include_once($this->getPath().DS.'Config/'.$file->getFilename());
+                static::$custom_config = array_merge($global_configs,$custom_config);
+            }
         }
+
+
     }
     
     public function getName()
