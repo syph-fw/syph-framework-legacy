@@ -32,6 +32,11 @@ class RouterCollection {
         return self::$routes[$name];
     }
 
+    public function add($firstParam,$secondParam)
+    {
+        $this->addAny($firstParam, $secondParam);
+    }
+
     public function addGet($firstParam,$secondParam)
     {
         $route = new Route();

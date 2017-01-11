@@ -81,26 +81,28 @@ class DB implements ServiceInterface
 
     private function buildConnection()
     {
-        switch ($this->connector_name_configured[$this->env]){
-            case 'active_record':
-                $connections = [];
-                $modelDirectories = [];
-                /**
-                 * @var ConnParameters $connection
-                 */
-                foreach ($this->connections as $connection) {
-                    if($connection->getName() == 'active_record'){
-                        $connections[$connection->getEnv()] = $connection->getStrToPDO();
+        if(count($this->connector_name_configured) > 0) {
+            switch ($this->connector_name_configured[$this->env]) {
+                case 'active_record':
+                    $connections = [];
+                    $modelDirectories = [];
+                    /**
+                     * @var ConnParameters $connection
+                     */
+                    foreach ($this->connections as $connection) {
+                        if ($connection->getName() == 'active_record') {
+                            $connections[$connection->getEnv()] = $connection->getStrToPDO();
+                        }
                     }
-                }
 
-                foreach ($this->kernel->getApps() as $app) {
-                    $modelDirectories[] = sprintf('%s%sModel',$app->getPath(),DS);
-                }
+                    foreach ($this->kernel->getApps() as $app) {
+                        $modelDirectories[] = sprintf('%s%sModel', $app->getPath(), DS);
+                    }
 
-                $connector = new ARConnector($this->env,$connections,$modelDirectories);
-                return $connector;
-                break;
+                    $connector = new ARConnector($this->env, $connections, $modelDirectories);
+                    return $connector;
+                    break;
+            }
         }
     }
 
