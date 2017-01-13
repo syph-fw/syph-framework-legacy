@@ -3,7 +3,8 @@
   "description": "SyphFramework",
   "type": "library",
   "keywords": ["framework"],
-  "minimum-stability": "stable",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
   "license": "MIT",
   "authors": [
     {
