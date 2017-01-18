@@ -302,7 +302,6 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
     public function finish()
     {
         $this->execturion_time = microtime(true) - $this->start;
-        echo $this->execturion_time;
     }
 
 }
