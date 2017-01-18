@@ -25,10 +25,6 @@ class Container implements ContainerInterface,SyphContainerInterface
         $this->load($mainServices);
     }
 
-    public function loadCustomContainer(array $customServices = array()){
-        $this->load($customServices);
-    }
-
     public function get($name)
     {
         return $this->service[$name];

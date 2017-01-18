@@ -4,6 +4,5 @@ return [
     'config',
     'services',
     'security',
-    'database',
-    'parameters'
+    'database'
 ];

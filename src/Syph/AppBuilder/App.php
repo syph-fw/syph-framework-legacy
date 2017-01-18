@@ -10,6 +10,7 @@ namespace Syph\AppBuilder;
 
 
 use Syph\AppBuilder\Interfaces\AppInterface;
+use Syph\Core\ConfigProvider;
 use Syph\DependencyInjection\Container\SyphContainer;
 
 class App extends SyphContainer implements AppInterface
@@ -21,16 +22,11 @@ class App extends SyphContainer implements AppInterface
     protected $default_template_engine;
     public static $custom_config;
 
-    public function buildConfig($accept_configs,$global_configs = array())
+    public function buildConfig(ConfigProvider $configProvider)
     {
-
-        foreach (new \DirectoryIterator($this->getPath().DS.'Config/') as $file) {
-            if ($file->isFile() && in_array($file->getBasename('.php'),$accept_configs)) {
-                $custom_config = include_once($this->getPath().DS.'Config/'.$file->getFilename());
-                static::$custom_config = array_merge($global_configs,$custom_config);
-            }
-        }
-
+        $configProvider->addConfigAppDir($this->name,$this->getPath().DS.'Config/');
+        $configProvider->buildConfigApp($this->name);
+        static::$custom_config = $configProvider->getConfigApp($this->name);
 
     }
     

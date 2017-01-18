@@ -9,8 +9,10 @@
 namespace Syph\AppBuilder\Interfaces;
 
 
+use Syph\Core\ConfigProvider;
+
 interface AppInterface {
-    public function buildConfig($accept_configs,$global_configs = array());
+    public function buildConfig(ConfigProvider $configProvider);
     public function getName();
     public function getNamespace();
     public function getPath();

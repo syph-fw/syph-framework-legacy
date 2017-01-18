@@ -37,7 +37,8 @@ class DB implements ServiceInterface
         $this->kernel = $kernel;
         $this->loadConfigDatabase($kernel->getConfig('database'));
 
-        $this->env = $kernel->getEnv();
+        $config = $kernel->getConfig('config');
+        $this->env = $config['environment'];
         $this->connector = $this->buildConnection();
 
     }
