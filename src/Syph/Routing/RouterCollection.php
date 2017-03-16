@@ -40,14 +40,14 @@ class RouterCollection {
     public function addGet($firstParam,$secondParam)
     {
         $route = new Route();
-        $this->handleParams($route,$firstParam, $secondParam);
+        $this->handleParams($route,$firstParam, $secondParam, 'GET');
         $route->setRequestType('GET');
     }
 
     public function addPost($firstParam,$secondParam)
     {
         $route = new Route();
-        $this->handleParams($route,$firstParam, $secondParam);
+        $this->handleParams($route,$firstParam, $secondParam, 'POST');
         $route->setRequestType('POST');
     }
 
@@ -58,11 +58,11 @@ class RouterCollection {
         $route->setRequestType('ANY');
     }
 
-    public function handleParams(Route $route,$firstParam,$secondParam)
+    public function handleParams(Route $route,$firstParam,$secondParam,$type = 'ANY')
     {
         $this->handleFirstParamRoute($route, $firstParam);
         $this->handleSecondParamRoute($route, $secondParam);
-        $this->addRouteOnCollection($route);
+        $this->addRouteOnCollection($route,$type);
     }
 
     private function handleFirstParamRoute(Route $route,$firstParam){
@@ -116,9 +116,9 @@ class RouterCollection {
         return $params;
     }
 
-    private function addRouteOnCollection(Route $route)
+    private function addRouteOnCollection(Route $route,$type)
     {
-        self::$routes[$route->getName()] = $route;
+        self::$routes[$type][$route->getName()] = $route;
     }
 
     private function handlePattern(Route $route, $pattern)

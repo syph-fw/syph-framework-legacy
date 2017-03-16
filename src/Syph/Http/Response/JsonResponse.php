@@ -14,14 +14,15 @@ class JsonResponse extends Response
 
     const OPT_ENCODING = 15;
 
-    public function __construct($content)
+    public function __construct($content,$code = 200)
     {
         parent::__construct('');
 
         if(!is_null($content)){
+            $content = array_merge(['code'=>$code],$content);
             $content = $this->handleContent($content);
         }else{
-            $content = array();
+            $content = array('code'=>$code);
         }
 
         $this->setContent($content);

@@ -22,24 +22,30 @@ class Router implements ServiceInterface
     public function __construct(UrlMatcher $matcher) {
         $this->matcher = $matcher;
         $this->collection = RouterCollection::getAllRoutes();
-        $this->loadCollection();
+        $this->loadGlobalCollection();
         $this->loadStatus();
     }
 
-    public function loadCollection(){
+    public function loadGlobalCollection(){
+        foreach ($this->collection as $type => $collection) {
+            $this->loadCollection($collection,$type);
+        }
+    }
+
+    public function loadCollection($collection,$type){
 
         if(!$this->checkCollection())
             return;
 
-        foreach ($this->collection as $name => $route) {
+        foreach ($collection as $name => $route) {
             if($this->matcher->isValidRoute($route))
-                $this->addRoute($name,$route);
+                $this->addRoute($name,$type,$route);
         }
 
     }
 
-    public function addRoute($name,Route $route){
-        $this->routes[$name] = $route;
+    public function addRoute($name,$type,Route $route){
+        $this->routes[$type][$name] = $route;
     }
 
     public function match($type,$url){
