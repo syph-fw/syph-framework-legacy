@@ -46,6 +46,10 @@ class Route {
     private $stringController;
 
     private $requestType;
+    /**
+     * @var RouteGroup $group
+     */
+    private $group;
 
     public function __construct($pattern = null,$callback = null)
     {
@@ -77,6 +81,10 @@ class Route {
      */
     public function getPattern()
     {
+        if($this->hasGroup()){
+
+            return $this->group->getPattern().$this->pattern;
+        }
         return $this->pattern;
     }
 
@@ -229,6 +237,32 @@ class Route {
 
         $this->filledParams = $params;
     }
+
+    public function hasGroup()
+    {
+        return !is_null($this->group);
+    }
+
+    /**
+     * @return RouteGroup
+     */
+    public function getGroup()
+    {
+        return $this->group;
+    }
+
+    /**
+     * @param RouteGroup $group
+     * @return Route
+     */
+    public function setGroup(RouteGroup $group)
+    {
+        $this->group = $group;
+        $group->addRoute($this);
+        return $this;
+    }
+
+
 
 
 }

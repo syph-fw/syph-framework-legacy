@@ -35,6 +35,10 @@ return array(
             'routing.urlmatcher' => array(
                 'class'=>'Syph\\Routing\\UrlMatcher',
                 'strategy'=>'instance'
+            ),
+            'routing.router_collection' => array(
+                'class'=>'Syph\\Routing\\RouterCollection',
+                'strategy'=>'instance'
             )
         )
     ),

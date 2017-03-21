@@ -19,9 +19,9 @@ class Router implements ServiceInterface
     private $collection = null;
     private $status;
 
-    public function __construct(UrlMatcher $matcher) {
+    public function __construct(UrlMatcher $matcher, RouterCollection $routerCollection) {
         $this->matcher = $matcher;
-        $this->collection = RouterCollection::getAllRoutes();
+        $this->collection = $routerCollection::getAllRoutes();
         $this->loadGlobalCollection();
         $this->loadStatus();
     }
