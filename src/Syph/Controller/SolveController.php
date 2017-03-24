@@ -74,7 +74,7 @@ class SolveController implements ServiceInterface{
         $callable = $this->createController($controller);
 
         if (!is_callable($callable)) {
-            throw new \Exception(sprintf('Controller "%s" for URI "%s" is not callable.', $controller, $request->getPathInfo()));
+            throw new \Exception(sprintf('Controller "%s" for URI "%s" is not callable.', $controller, $request->getRequestUri()));
         }
 
         return $callable;

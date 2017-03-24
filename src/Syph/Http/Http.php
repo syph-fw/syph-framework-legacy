@@ -47,7 +47,7 @@ class Http implements HttpInterface, ServiceInterface
     public function run(Request $request){
 
         if (false === $controller = $this->solveController->getController($request)) {
-            throw new \Exception(sprintf('Unable to find the controller for path "%s". The route is wrongly configured.', $request->getPathInfo()));
+            throw new \Exception(sprintf('Unable to find the controller for path "%s". The route is wrongly configured.', $request->getRequestUri()));
         }
         
 
