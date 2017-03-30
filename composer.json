@@ -20,7 +20,7 @@
     "swiftmailer/swiftmailer": "@stable",
     "deployer/deployer":"^3.2",
     "php-activerecord/php-activerecord": "^1.1",
-    "hoa/console": "~3.0"
+    "league/climate": "^3.2"
   },
   "require-dev":{
     "phpunit/phpunit": "3.7.*"

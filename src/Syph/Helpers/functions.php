@@ -1,7 +1,7 @@
 <?php
 use \Syph\DependencyInjection\Container\OmniContainer;
 $container = OmniContainer::getInstance()->getContainer();
-define('BASE_URL',$container->get('http.request')->getBaseUrl());
+//define('BASE_URL',$container->get('http.request')->getBaseUrl());
 
 if ( ! function_exists('sd'))
 {
@@ -21,18 +21,18 @@ if ( ! function_exists('sd'))
     }
 }
 
-
-if(defined('BASE_URL')){
-    if ( ! function_exists('asset'))
-    {
-        function asset($url){
-            return BASE_URL.$url;
-        }
-    }
-    if ( ! function_exists('path'))
-    {
-        function path($url){
-            return BASE_URL.$url;
-        }
-    }
-}
+//
+//if(defined('BASE_URL')){
+//    if ( ! function_exists('asset'))
+//    {
+//        function asset($url){
+//            return BASE_URL.$url;
+//        }
+//    }
+//    if ( ! function_exists('path'))
+//    {
+//        function path($url){
+//            return BASE_URL.$url;
+//        }
+//    }
+//}
