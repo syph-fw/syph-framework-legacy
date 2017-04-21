@@ -16,4 +16,5 @@ interface ContainerInterface
     public function get($id);
     public function set(ServiceInterface $service);
     public function load($serviceArray);
+    public function has($name);
 }

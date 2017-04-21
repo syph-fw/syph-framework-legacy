@@ -83,4 +83,9 @@ class Router implements ServiceInterface
     public function getMatcher(){
         return $this->matcher;
     }
+
+    public function getCollection()
+    {
+        return $this->collection;
+    }
 }

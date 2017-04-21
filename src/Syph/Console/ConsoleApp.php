@@ -34,7 +34,7 @@ class ConsoleApp
     {
         foreach ($this->kernel->getNativeCommands() as $command) {
             $reflect = new \ReflectionClass(Command::_namespace.'\\NativeCommands\\'.$command);
-            $this->registerCommand($reflect->newInstance('test','stes'));
+            $this->registerCommand($reflect->newInstance($command,0));
         }
 
     }

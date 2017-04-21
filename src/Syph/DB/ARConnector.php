@@ -20,7 +20,7 @@ class ARConnector extends SyphDBConnector
      */
     public function __construct($env,$connections,$modelDirectories)
     {
-        $this->configurator = $this->configureAR($connections);
+        require_once VENDOR_DIR.'php-activerecord/php-activerecord/ActiveRecord.php';
         $this->configurator = $this->configureAR($connections);
         foreach ($modelDirectories as $modelDirectory) {
             $this->configurator->set_model_directory($modelDirectory);
@@ -30,7 +30,6 @@ class ARConnector extends SyphDBConnector
 
     private function configureAR($connections)
     {
-        require_once VENDOR_DIR.'php-activerecord/php-activerecord/ActiveRecord.php';
         $config = \ActiveRecord\Config::instance();
         $config->set_connections($connections);
         return $config;

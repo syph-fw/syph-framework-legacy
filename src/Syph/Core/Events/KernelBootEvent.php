@@ -9,7 +9,8 @@
 namespace Syph\Core\Events;
 
 
-use Interop\Container\ContainerInterface;
+use Syph\Core\ConfigProvider;
+use Syph\DependencyInjection\Container\Interfaces\ContainerInterface;
 use Syph\DependencyInjection\ServiceInterface;
 use Syph\EventDispatcher\EventDispatcher;
 use Syph\EventDispatcher\Interfaces\EventInterface;
@@ -19,16 +20,23 @@ use Syph\Routing\Router;
 
 class KernelBootEvent implements EventInterface
 {
-
+    /**
+     * @var ContainerInterface $container
+     */
     private $container;
+    /**
+     * @var ConfigProvider $config_provider
+     */
+    private $config_provider;
 
     /**
      * KernelBootEvent constructor.
      * @param $kernel
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, ConfigProvider $provider)
     {
         $this->container = $container;
+        $this->config_provider = $provider;
     }
 
     /**
@@ -80,10 +88,19 @@ class KernelBootEvent implements EventInterface
      */
     public function setOnContainer(ServiceInterface $service)
     {
-        if($this->container->has($service->getName())){
+        if(!$this->container->has($service->getName())){
             $this->container->set($service);
         }
     }
+
+    /**
+     * @return array
+     */
+    public function getSecurityConfig()
+    {
+        return $this->config_provider->getConfig('security');
+    }
+
 
     /**
      * @return string

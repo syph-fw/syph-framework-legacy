@@ -138,8 +138,9 @@ class Request implements ServiceInterface{
         $this->requestUri = null;
         $this->baseUrl = null;
         $this->basePath = null;
-        $this->method = $server['REQUEST_METHOD'];
-
+        if (PHP_SAPI != 'cli') {
+            $this->method = $server['REQUEST_METHOD'];
+        }
     }
 
     /**

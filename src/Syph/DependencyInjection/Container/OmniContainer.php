@@ -11,19 +11,34 @@ namespace Syph\DependencyInjection\Container;
 
 class OmniContainer
 {
+    /**
+     * @var OmniContainer $instance
+     */
     public static $instance;
+    /**
+     * @var Container $container
+     */
     private $container = null;
 
+    /**
+     * @return Container
+     */
     public function getContainer()
     {
-        return $this->container;
+        return self::$instance->container;
     }
 
+    /**
+     * @param Container $container
+     */
     public function setContainer(Container $container)
     {
-        $this->container = $container;
+        self::$instance->container = $container;
     }
 
+    /**
+     * @return OmniContainer
+     */
     public static function getInstance()
     {
         if (!isset(self::$instance)) {

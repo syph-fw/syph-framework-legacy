@@ -9,6 +9,10 @@
 namespace Syph\Routing;
 
 
+use Syph\Security\Firewall\Firewall;
+use Syph\Security\Firewall\Gate;
+use Syph\Security\Firewall\GateGuardian;
+
 class Route {
     /**
      * @var string $name
@@ -50,6 +54,10 @@ class Route {
      * @var RouteGroup $group
      */
     private $group;
+    /**
+     * @var Gate $gate
+     */
+    private $gate;
 
     public function __construct($pattern = null,$callback = null)
     {
@@ -262,7 +270,20 @@ class Route {
         return $this;
     }
 
+    public function setGate(Gate $gate)
+    {
+        $this->gate = $gate;
+        return $this;
+    }
 
+    public function getGate()
+    {
+        return $this->gate;
+    }
 
+    public function itsBehindTheGate()
+    {
+        return $this->gate instanceof Gate;
+    }
 
 }

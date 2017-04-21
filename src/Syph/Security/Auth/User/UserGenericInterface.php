@@ -12,4 +12,9 @@ namespace Syph\Security\Auth\User;
 interface UserGenericInterface
 {
     public function isEnabled();
+
+    public function getUsername();
+    public function setUsername($username);
+    public function getPassword();
+    public function setPassword($pass);
 }

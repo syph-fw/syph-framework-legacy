@@ -42,7 +42,7 @@ class ConfigProvider
     private function loadConfigsDirectories()
     {
         $this->internal_config_dir = sprintf('%s/Config/',realpath(dirname(__FILE__)));
-        $this->global_config_dir   = sprintf('%s/global/',APP_REAL_PATH);
+        $this->global_config_dir   = sprintf('%s/config/',APP_REAL_PATH);
     }
 
     private function loadAcceptConfigs()

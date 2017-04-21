@@ -118,8 +118,9 @@ class SessionBottle implements \IteratorAggregate
 
     public function remove($name)
     {
-        if($this->has($name))
+        if($this->has($name)){
             unset($this->attributes[$name]);
+        }
     }
 
     public function load(&$attr)

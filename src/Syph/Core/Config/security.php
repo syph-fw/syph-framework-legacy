@@ -6,23 +6,9 @@
  * Time: 15:22
  */
 return [
-    'model'=>'',
-    'provider'=>'database',// ('database','memory')
     'roles'=>[
         'user'=>[],
         'admin'=>['user'],
         'super_admin'=>['user','admin'],
-    ],
-    'firewall' => [
-        'main' => [
-            'login' => '/admin',
-            'login_checker' => '/admin/check',
-            //routes mapped in firewall
-            'routes'=>[
-                //route_path => role
-                '/admin'        => 'ADMIN',
-                '/admin/test'   => 'ADMIN',
-            ]
-        ]
     ]
 ];

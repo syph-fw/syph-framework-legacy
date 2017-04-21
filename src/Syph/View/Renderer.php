@@ -12,6 +12,7 @@ use Syph\DependencyInjection\ServiceInterface;
 use Syph\Http\Base\Request;
 use Syph\Helpers\FilesHelper;
 use Syph\Twig\Extension\AssetsExtension;
+use Syph\Twig\ExtensionProvider;
 use Syph\View\Interfaces\RendererInterface;
 
 class Renderer implements RendererInterface,ServiceInterface
@@ -51,7 +52,14 @@ class Renderer implements RendererInterface,ServiceInterface
                 $loader = new \Twig_Loader_Filesystem(realpath($this->view_path));
                 $twig = new \Twig_Environment($loader,array('debug' => true,));
                 $twig->addExtension(new \Twig_Extension_Debug());
-                $twig->addExtension(new AssetsExtension($this->baseUrl));
+
+                $extensionProvider = new ExtensionProvider();
+
+                $extensions = $extensionProvider->getExtensions();
+                foreach ($extensions as $extension) {
+                    $twig->addExtension($extension);
+                }
+
                 $template = $twig->loadTemplate($this->view_request);
                 return $template->render($vars);
                 break;

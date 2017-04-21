@@ -19,6 +19,7 @@ use Syph\Core\Interfaces\SyphKernelInterface;
 use Syph\AppBuilder\Interfaces\BuilderInterface;
 use Syph\DependencyInjection\Container\OmniContainer;
 use Syph\DependencyInjection\ServiceInterface;
+use Syph\EventDispatcher\EventDispatcher;
 use Syph\Exception\ExceptionHandler;
 use Syph\Http\Base\Request;
 use Syph\Http\Http;
@@ -40,6 +41,9 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
      * @var Container $container
      */
     protected $container;
+    /**
+     * @var EventDispatcher $dispatcher
+     */
     protected $dispatcher;
     protected $syphAppDir;
     protected $syphAppLoggDir;
@@ -79,19 +83,26 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
             $this->loadGlobalConfigs();
             $this->initApps();
             $this->initContainer($request);
-            $this->initEventDispatcher();
             $this->initFunctions();
+            $this->initEventDispatcher();
             $this->bindContainerApps();
 
-            if (!$this->mode == 'CLI'){
-                $this->bindRouterRequest();
-            }
 
             $this->isBooted = true;
         }catch (\Exception $e){
             throw $e;
         }
-        $this->dispatcher->dispatch(KernelEventList::KERNEL_BOOTED, new KernelBootEvent($this->container));
+        if (!$this->mode == 'CLI'){
+            $this->dispatcher->dispatch(
+                KernelEventList::KERNEL_BOOTED,
+                new KernelBootEvent(
+                    $this->container,
+                    $this->configProvider
+                )
+            );
+
+            $this->bindRouterRequest();
+        }
     }
 
     private function initEventDispatcher()
@@ -138,8 +149,11 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
 
         $this->container = new Container($this);
         $this->container->set($request);
-        $this->container->startContainer($this->global_configs['services']);
-
+        if (!$this->mode == 'CLI'){
+            $this->container->startContainer($this->global_configs['services']);
+        }else{
+            $this->container->startContainer($this->global_configs['services_cli']);
+        }
         $omniContainer = OmniContainer::getInstance();
         $omniContainer->setContainer($this->container);
 
@@ -153,7 +167,6 @@ abstract class Kernel implements SyphKernelInterface,ServiceInterface
             if(preg_match('/Command\.php/',$fileInfo->getFilename()))
                 $files[] = $fileInfo->getBasename('.php');
         }
-
         return $files;
     }
 

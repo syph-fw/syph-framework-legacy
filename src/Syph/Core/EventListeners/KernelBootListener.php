@@ -16,6 +16,8 @@ use Syph\EventDispatcher\Interfaces\EventListernerInterface;
 use Syph\Routing\Router;
 use Syph\Security\Firewall\Firewall;
 use Syph\Security\Firewall\FirewallLoadedEvent;
+use Syph\Security\SecurityConfig;
+use Syph\Security\SecurityProfile;
 
 class KernelBootListener implements EventListernerInterface, ServiceInterface
 {
@@ -40,8 +42,14 @@ class KernelBootListener implements EventListernerInterface, ServiceInterface
     }
 
     public function runFirewall(KernelBootEvent $kernelBootEvent){
-        $firewall = new Firewall($kernelBootEvent->getRequest(), $kernelBootEvent->getRouter());
+        $security_config = new SecurityConfig($kernelBootEvent->getSecurityConfig());
+        $firewall = new Firewall(
+            $kernelBootEvent->getSession(),
+            $kernelBootEvent->getRequest(),
+            $kernelBootEvent->getRouter(),
+            $security_config
+        );
         $kernelBootEvent->setOnContainer($firewall);
-        //$kernelBootEvent->getEventDispatcher()->dispatch(Firewall::FIREWALL_LOAD_EVENT, new FirewallLoadedEvent());
+//        $kernelBootEvent->getEventDispatcher()->dispatch(Firewall::FIREWALL_LOAD_EVENT, new FirewallLoadedEvent());
     }
 }

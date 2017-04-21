@@ -71,6 +71,13 @@ return array(
         'class'=>'Syph\\Security\\Firewall\\FirewallProvider',
         'strategy'=>'event_listener'
     ),
+    'security.csrf' => array(
+        'class'=>'Syph\\Security\\Csrf\\Csrf',
+        'strategy'=>'instance',
+        'args'=> array(
+            'http.session' => array()
+        )
+    ),
     'view.renderer' => array(
         'class'=>'Syph\\View\\Renderer',
         'strategy'=>'instance',
@@ -80,10 +87,6 @@ return array(
                 'strategy'=>'instance'
             )
         )
-    ),
-    'security.authentication.checker' => array(
-        'class'=>'Syph\\Security\\Auth\\AuthenticationCheker',
-        'strategy'=>'event_listener'
     ),
     'cache' => array(
         'class'=>'Syph\\Cache\\FileCache',
