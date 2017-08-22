@@ -1,5 +1,5 @@
 {
-  "name": "sylabs/syph-framework",
+  "name": "syph-fw/syph-framework",
   "description": "SyphFramework",
   "type": "library",
   "keywords": ["framework"],
